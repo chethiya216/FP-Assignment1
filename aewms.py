@@ -1,3 +1,5 @@
+from datetime import datetime
+
 awems = []
 
 def main_menu():
@@ -23,14 +25,29 @@ def main_menu():
 # def generate_report():
 
 
-def view_all_items():
+def display_items():
     if len(awems) == 0:
         print("No items available.\n")
         return
     else:
+        print("All items:")
+        print(f"{'Item ID':<20} {'Device Name':<20} {'Category':<20} {'Weight':<20} {'Storage Status':<20} {'Fee/kg':<20} {'Date Added':<20}")
         for item in awems:
-            print("All items:")
-            print(item)
+            print(f"{item[0]:<20} {item[1]:<20} {item[2]:<20} {item[3]:<20} {item[4]:<20} {item[5]:<20} {item[6]:<20}")
+
+def add_item():
+    new_id = generate_id()
+    print(f"Item ID: {new_id}")
+    item_id = new_id
+    item_name = input(("Enter item name: "))
+    item_category = input("Enter item category: ")
+    item_weight = float(input("Enter item weight in KG: "))
+    item_storage_status = input("Enter item storage status: ")
+    item_fee_per_kg = float(input("Enter item fee per KG: "))
+    date_added = datetime.now().strftime("%d/%m/%Y")
+    item = (item_id, item_name,item_category,item_weight,item_storage_status, item_fee_per_kg,date_added)
+    awems.append(item)
+    print("Item added successfully.")
 
 
 while True:
@@ -38,7 +55,7 @@ while True:
     choice = int(input("Enter Menu Item No: "))
     match choice:
         case 1:
-                view_all_items()
+                display_items()
         case 2:
                 add_item()
         case 3:
