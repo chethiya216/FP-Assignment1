@@ -24,6 +24,15 @@ def main_menu():
 # def check_storage():
 # def generate_report():
 
+# to automatically generate next item ID
+def generate_id():
+    if len(awems) == 0:
+        return "EW001"
+    else:
+        last_id = awems[-1][0][-3:]
+        new_id = int(last_id) + 1
+        new_id = f"EW{new_id:03d}"
+        return new_id
 
 def display_items():
     if len(awems) == 0:
