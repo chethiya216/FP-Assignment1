@@ -1,0 +1,2 @@
+EW001,Laptop,Electronics,3.0,300.0,10/05/2026 -- 00:02:40
+EW002,Headphones,Electronics,0.3,300.0,10/05/2026 -- 00:03:50

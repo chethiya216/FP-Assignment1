@@ -3,19 +3,19 @@ from datetime import datetime
 awems = []
 
 def main_menu():
-        print("====== Welcome to E-Waste Management System ======"),
-        print("1. View all items"),
-        print("2. Add new item"),
-        print("3. Update item"),
-        print("4. Delete item"),
-        print("5. Search item"),
-        print("6. Calculate fee"),
-        print("7. Generate report"),
-        print("8. Exit")
+    print("====== Welcome to E-Waste Management System ======"),
+    print("1. View all items"),
+    print("2. Add new item"),
+    print("3. Update item"),
+    print("4. Delete item"),
+    print("5. Search item"),
+    print("6. Calculate fee"),
+    print("7. Generate report"),
+    print("8. Exit")
 
 # def load_data():
 # def save_data():
-# def add_item():
+# //* def add_item():
 # def update_item():
 # def delete_item():
 # def search_item():
@@ -40,9 +40,11 @@ def display_items():
         return
     else:
         print("All items:")
-        print(f"{'Item ID':<20} {'Device Name':<20} {'Category':<20} {'Weight':<20} {'Storage Status':<20} {'Fee/kg':<20} {'Date Added':<20}")
+        print(f"{'Item ID:':<20} {'Device Name:':<20} {'Category:':<20} {'Weight(kg):':<20} {'Fee/kg(Rs:):':<20} {'Date Added:':<20}")
         for item in awems:
-            print(f"{item[0]:<20} {item[1]:<20} {item[2]:<20} {item[3]:<20} {item[4]:<20} {item[5]:<20} {item[6]:<20}")
+            print(
+                f"{item[0]:<20} {item[1]:<20} {item[2]:<20} {item[3]:<20} {item[4]:<20} {item[5]:<20}")
+
 
 def add_item():
     new_id = generate_id()
@@ -51,12 +53,17 @@ def add_item():
     item_name = input(("Enter item name: "))
     item_category = input("Enter item category: ")
     item_weight = float(input("Enter item weight in KG: "))
-    item_storage_status = input("Enter item storage status: ")
     item_fee_per_kg = float(input("Enter item fee per KG: "))
-    date_added = datetime.now().strftime("%d/%m/%Y")
-    item = (item_id, item_name,item_category,item_weight,item_storage_status, item_fee_per_kg,date_added)
+    date_added = datetime.now().strftime("%d/%m/%Y -- %H:%M:%S")
+    item = (item_id, item_name, item_category, item_weight, item_fee_per_kg, date_added)
     awems.append(item)
-    print("Item added successfully.")
+    print("\nItem added successfully.------------\n")
+    save_data()
+
+def save_data():
+    with open("awems_data.txt", "w") as file:
+        for item in awems:
+            file.write(",".join(map(str, item)) + "\n")
 
 
 while True:
@@ -64,20 +71,20 @@ while True:
     choice = int(input("Enter Menu Item No: "))
     match choice:
         case 1:
-                display_items()
+            display_items()
         case 2:
-                add_item()
+            add_item()
         case 3:
-                update_item()
+            update_item()
         case 4:
-                delete_item()
+            delete_item()
         case 5:
-                search_item()
+            search_item()
         case 6:
-                calculate_fee()
+            calculate_fee()
         case 7:
-                generate_report()
+            generate_report()
         case 8:
-                exit()
+            exit()
         case _:
-                print("Invalid choice")
+            print("Invalid choice")
