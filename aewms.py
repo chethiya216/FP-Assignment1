@@ -114,6 +114,40 @@ def delete_item():
             return
     print("\nItem not found.------------\n")
 
+def update_item():
+    item_id = input("Enter item ID to update: ")
+    for item in awems:
+        if item["item_id"] == item_id:
+            print(f"Current Name: {item['device_name']}")
+            new_name = input("Enter new name (leave blank to keep current): ")
+            if new_name:
+                item["device_name"] = new_name
+
+            print(f"Current Category: {item['category']}")
+            new_category = input("Enter new category (leave blank to keep current): ")
+            if new_category:
+                item["category"] = new_category
+
+            print(f"Current Storage Status: {item['storage_status']}")
+            new_storage_status = input("Enter new storage status (leave blank to keep current): ")
+            if new_storage_status:
+                item["storage_status"] = new_storage_status
+
+            print(f"Current Weight: {item['weight']} KG")
+            new_weight_input = input("Enter new weight in KG (leave blank to keep current): ")
+            if new_weight_input:
+                item["weight"] = float(new_weight_input)
+
+            print(f"Current Fee per KG: {item['fee_per_kg']}")
+            new_fee_input = input("Enter new fee per KG (leave blank to keep current): ")
+            if new_fee_input:
+                item["fee_per_kg"] = float(new_fee_input)
+
+            save_data()
+            print("\nItem updated successfully.------------\n")
+            return
+    print("\nItem not found.------------\n")
+
 #main selection logic
 while True:
     main_menu()
@@ -141,8 +175,8 @@ while True:
 # //*def load_data():
 # //*def save_data():
 # //*def add_item():
-# def update_item():
-# def delete_item():
+# //*def update_item():
+# //*def delete_item():
 # def search_item():
 # def calculate_fee(weight, fee_per_kg):
 # def hazard_alert():
