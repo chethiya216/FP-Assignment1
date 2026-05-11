@@ -85,7 +85,7 @@ def add_item():
     new_id = generate_id()
     print(f"Item ID: {new_id}")
     item_id = new_id
-    item_name = input(("Enter item name: "))N
+    item_name = input(("Enter item name: "))
     item_category = input("Enter item category: ")
     item_storage_status = input("Enter item storage status: ")
     item_weight = float(input("Enter item weight in KG: "))
@@ -103,6 +103,16 @@ def add_item():
     awems.append(item)
     save_data()
     print("\nItem added successfully.------------\n")
+
+def delete_item():
+    item_id = input("Enter item ID to delete: ")
+    for item in awems:
+        if item["item_id"] == item_id:
+            awems.remove(item)
+            save_data()
+            print("\nItem deleted successfully.------------\n")
+            return
+    print("\nItem not found.------------\n")
 
 #main selection logic
 while True:
@@ -128,9 +138,9 @@ while True:
         case _:
             print("Invalid choice")
 
-# def load_data():
-# def save_data():
-# def add_item():
+# //*def load_data():
+# //*def save_data():
+# //*def add_item():
 # def update_item():
 # def delete_item():
 # def search_item():
