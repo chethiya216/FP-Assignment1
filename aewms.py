@@ -163,10 +163,30 @@ def search_item():
     print("\nItem not found.------------\n")
 
 
+def calculate_fee():
+    item_id = input("Enter item ID to calculate fee: ")
+    for item in awems:
+        if item["item_id"] == item_id:
+            weight = float(item["weight"])
+            fee_per_kg = float(item["fee_per_kg"])
+            fee = weight * fee_per_kg
+            if weight > 50:
+                fee *= 0.05  # Apply 5% surcharge for items over 50kg
+
+            print("Total weight: ", weight, "kg")
+            print("Fee per kg: ", fee_per_kg)
+            if weight > 50:
+                fee += fee * 0.05  # Add surcharge to total fee
+                print("Surcharge applied: 5% for items over 50kg")
+            print("Total payable fee: ", fee, "\n")
+            return
+    print("\nItem not found.------------\n")
+
+
 #main selection logic
 while True:
     main_menu()
-    choice = int(input("Enter Menu Item No: \n"))
+    choice = int(input("Enter Menu Item No: "))
     match choice:
         case 1:
             display_items()
