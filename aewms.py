@@ -76,7 +76,7 @@ def display_items():
             f"Category: {item['category']} |",
             f"Storage Status: {item['storage_status']} |",
             f"Weight: {item['weight']} |",
-            f"Fee per KG: {item['fee_per_kg']} |",
+            f"Fee per kg: {item['fee_per_kg']} |",
             f"Date Added: {item['date_added']}\n")
 
 
@@ -88,8 +88,8 @@ def add_item():
     item_name = input(("Enter item name: "))
     item_category = input("Enter item category: ")
     item_storage_status = input("Enter item storage status: ")
-    item_weight = float(input("Enter item weight in KG: "))
-    item_fee_per_kg = float(input("Enter item fee per KG: "))
+    item_weight = float(input("Enter item weight in kg: "))
+    item_fee_per_kg = float(input("Enter item fee per kg: "))
     date_added = datetime.now().strftime("%d/%m/%Y -- %H:%M:%S")
     item = {
         "item_id": new_id,
@@ -133,13 +133,13 @@ def update_item():
             if new_storage_status:
                 item["storage_status"] = new_storage_status
 
-            print(f"Current Weight: {item['weight']} KG")
-            new_weight_input = input("Enter new weight in KG (leave blank to keep current): ")
+            print(f"Current Weight: {item['weight']} kg")
+            new_weight_input = input("Enter new weight in kg (leave blank to keep current): ")
             if new_weight_input:
                 item["weight"] = float(new_weight_input)
 
-            print(f"Current Fee per KG: {item['fee_per_kg']}")
-            new_fee_input = input("Enter new fee per KG (leave blank to keep current): ")
+            print(f"Current Fee per kg: {item['fee_per_kg']}")
+            new_fee_input = input("Enter new fee per kg (leave blank to keep current): ")
             if new_fee_input:
                 item["fee_per_kg"] = float(new_fee_input)
 
@@ -147,6 +147,21 @@ def update_item():
             print("\nItem updated successfully.------------\n")
             return
     print("\nItem not found.------------\n")
+
+def search_item():
+    item_id = input("Enter item ID to search: ")
+    for item in awems:
+        if item["item_id"] == item_id:
+            print(f"Item ID: {item['item_id']} |",
+                f"Name: {item['device_name']} |",
+                f"Category: {item['category']} |",
+                f"Storage Status: {item['storage_status']} |",
+                f"Weight: {item['weight']} |",
+                f"Fee per kg: {item['fee_per_kg']} |",
+                f"Date Added: {item['date_added']}\n")
+            return
+    print("\nItem not found.------------\n")
+
 
 #main selection logic
 while True:
@@ -177,7 +192,7 @@ while True:
 # //*def add_item():
 # //*def update_item():
 # //*def delete_item():
-# def search_item():
+# //*def search_item():
 # def calculate_fee(weight, fee_per_kg):
 # def hazard_alert():
 # def check_storage():
