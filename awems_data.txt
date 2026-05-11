@@ -1,2 +1,2 @@
-EW001,Laptop,Electronics,3.0,300.0,10/05/2026 -- 00:02:40
-EW002,Headphones,Electronics,0.3,300.0,10/05/2026 -- 00:03:50
+EW001|Laptop|Elecs|3.0|5.0|Recyclable|11/05/2026 -- 20:07:29
+EW002|Laptop|Electronics|3.0|50.0|Recyclable|11/05/2026 -- 20:14:46
