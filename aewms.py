@@ -52,7 +52,8 @@ def main_menu():
     print("5. Search item"),
     print("6. Calculate fee"),
     print("7. Generate report"),
-    print("8. Exit")
+    print("8. Hazardous items alert"),
+    print("9. Exit")
 
 # to automatically generate next item ID
 def generate_id():
@@ -86,7 +87,7 @@ def add_item():
     print(f"Item ID: {new_id}")
     item_id = new_id
     item_name = input(("Enter item name: "))
-    item_category = input("Enter item category: ")
+    item_category = input("Enter item category (Recyclable / Hazardous / Non-Recyclable) : ")
     item_storage_status = input("Enter item storage status: ")
     item_weight = float(input("Enter item weight in kg: "))
     item_fee_per_kg = float(input("Enter item fee per kg: "))
@@ -182,6 +183,20 @@ def calculate_fee():
             return
     print("\nItem not found.------------\n")
 
+def check_hazard_alert():
+    print("\n--- Hazardous Waste Disposal Alerts (Over 30 Days) ---")
+    today = datetime.now()
+    for item in awems:
+        if item["category"].lower() == "hazardous" and item["storage_status"].lower() == "stored":
+            date_string = item["date_added"].split(" -- ")[0]
+            date_added = datetime.strptime(date_string, "%d/%m/%Y")
+            time_difference = ( today - date_added).days
+            if time_difference > 30:
+                print(
+                    f"ALERT: Item {item['item_id']} ({item['device_name']}) Stored for {time_difference} days. Urgent disposal required!")
+                print(f"      ")
+        else:
+            print("All hazardous items are within safe storage duration.\n")
 
 #main selection logic
 while True:
@@ -203,6 +218,8 @@ while True:
         case 7:
             generate_report()
         case 8:
+            check_hazard_alert()
+        case 9:
             exit()
         case _:
             print("Invalid choice")
@@ -213,7 +230,7 @@ while True:
 # //*def update_item():
 # //*def delete_item():
 # //*def search_item():
-# def calculate_fee(weight, fee_per_kg):
-# def hazard_alert():
+# //*def calculate_fee():
+# //*def hazard_alert():
 # def check_storage():
 # def generate_report():
