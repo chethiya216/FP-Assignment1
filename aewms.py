@@ -371,6 +371,8 @@ while True:
         case 8:
             check_hazard_alert()
         case 9:
+            save_data()
+            print("Data saved successfully. Good Bye!!!\n")
             exit()
         case 10:
             storage_check()
