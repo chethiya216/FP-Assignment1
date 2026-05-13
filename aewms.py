@@ -61,7 +61,7 @@ def storage_check():
 def save_data():
     with open(File_Name, "w") as file:
         for item in awems:
-            line = (f"{item['item_id']}|"
+            line = (f"{item['item_id'].lower()}|"
                     f"{item['device_name']}|"
                     f"{item['category']}|"
                     f"{item['weight']}|"
@@ -78,7 +78,7 @@ def main_menu():
     print("2. Add New E-Waste Item")
     print("3. Update Existing Item")
     print("4. Delete Item")
-    print("5. Search Item by ID")
+    print("5. Search Item by ID or Device Name")
     print("6. Calculate Processing Fee")
     print("7. Generate Storage Reports")
     print("8. Check Hazardous Expiry (30 Days)")
@@ -244,18 +244,25 @@ def update_item():
 
 
 def search_item():
-    item = input("Enter item ID to search: ")
+    search_text = input("Enter item ID or Item Name to search: ").strip().lower()
+    results = []
+
     for item in awems:
-        if item["item_id"] == item_id:
-            print(f"Item ID: {item['item_id']} |",
-                  f"Name: {item['device_name']} |",
-                  f"Category: {item['category']} |",
-                  f"Storage Status: {item['storage_status']} |",
-                  f"Weight: {item['weight']} |",
-                  f"Fee per kg: {item['fee_per_kg']} |",
-                  f"Date Added: {item['date_added']}\n")
-            return
-    print("\nItem not found.------------\n")
+        if search_text in item["item_id"].lower() or search_text in item["device_name"].lower():
+            results.append(item)
+
+    if len(results) > 0:
+        print(f"Found {len(results)} matches.")
+        for match in results:
+            print(f"Item ID         : {match['item_id']} |",
+                    f"Name          : {match['device_name']} |", 
+                    f"Category      : {match['category']} |",
+                    f"Storage Status: {match['storage_status']} |",
+                    f"Weight        : {match['weight']} |",
+                    f"Fee per kg    : {match['fee_per_kg']} |",
+                    f"Date Added    : {match['date_added']}\n")
+    else:
+        print("\nNo matches found.------------\n")
 
 
 # to calculate fee for an item
