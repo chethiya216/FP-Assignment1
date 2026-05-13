@@ -38,15 +38,23 @@ load_data()
 #to check storage capacity and alert if it is exceeded
 def storage_check():
     storage_capacity = 1000  # in kg
-    total_storage = 0
-    for item in awems:
-        total_storage = total_storage + float(item["weight"])
-    if (total_storage*0.8) > storage_capacity:
-        print(
-            f"ALERT:! Total storage used: {total_storage} kg, which exceeds the limit of  80% of the storage capacity.\n")
-    print(f"Total storage capacity used: {total_storage} kg")
-    print(
-        f"Available storage capacity: {storage_capacity - total_storage} kg\n")
+    storage = 0
+    total_storage = sum(float(item["weight"]) for item in awems)
+    percentage = (total_storage / storage_capacity) * 100
+    print(f"\n=== STORAGE CAPACITY STATUS ===")
+    print(f"Total Used    : {total_storage:.2f} kg")
+    print(f"Total Capacity: {storage_capacity} kg")
+    print(f"Usage         : {percentage:.1f}%")
+    print(f"Available     : {storage_capacity - total_storage:.2f} kg")
+
+    # warn if over 80%
+    if total_storage >= storage_capacity:
+        print("ALERT: Storage is FULL. Cannot add more items!")
+    elif total_storage > (storage_capacity * 0.8):
+        print("WARNING: Storage exceeds 80% capacity!")
+    else:
+        print("Storage level is normal.")
+    print("================================\n")
 
 
 #to save data to txt file when program is closed
@@ -105,22 +113,70 @@ def display_items():
 
 # to add items
 def add_item():
+    current_total = sum(float(item["weight"])for item in awems)
+    if current_total >= MAX_CAPACITY:
+        print("ALERT: Storage is FULL. Cannot add more items!\n")
+        return
+
     new_id = generate_id()
     print(f"Item ID: {new_id}")
     item_id = new_id
+
     item_name = input(("Enter item name: "))
-    item_category = input(
-        "Enter item category (Recyclable / Hazardous / Non-Recyclable) : ")
-    item_storage_status = input("Enter item storage status: ")
+    while item_name == "":
+        print("Item name cannot be empty")
+        item_name = input("Enter item name: ")
+
+    while True:
+        try:
+            item_category = int(input("Enter item category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) : "))
+            match item_category:
+                case 1:
+                    item_category = "Recyclable"
+                    break
+                case 2:
+                    item_category = "Hazardous"
+                    break
+                case 3:
+                    item_category = "Non-Recyclable"
+                    break
+                case _:
+                    print("Invalid category")
+        except ValueError:
+            print("Invalid Input. Enter a number.")
+            
+    item_storage_status = "Stored" # default storage status
+
     current_total = sum(float(item['weight']) for item in awems)
-    item_weight = float(input(
-        f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {MAX_CAPACITY} kg): "))
-    if current_total + item_weight > MAX_CAPACITY:
-        print(
-            f"Cannot add item. Adding this item would exceed the maximum storage capacity of {MAX_CAPACITY} kg.\n")
-        return
-    item_fee_per_kg = float(input("Enter item fee per kg: "))
+    while True:
+        try:
+            item_weight = float(input(f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {MAX_CAPACITY} kg): "))
+            if item_weight <= 0:
+                print("Weight must be a positive number.")
+                continue
+
+            if current_total + item_weight > MAX_CAPACITY:
+                print(f"Cannot add item. Adding this item would exceed the maximum storage capacity of {MAX_CAPACITY} kg.\n")
+                storage_check()
+                return
+            break
+
+        except ValueError:
+            print("Invalid weight. Please enter a number.")
+        
+
+    while True:
+        try:
+            item_fee_per_kg = float(input("Enter item fee per kg: "))
+            if item_fee_per_kg <= 0:
+                print("Fee cannot be negative.")
+                continue
+            break
+        except ValueError:
+            print("Invalid fee per kg. Enter only the amount without KG")
+
     date_added = datetime.now().strftime("%d/%m/%Y -- %H:%M:%S")
+
     item = {
         "item_id": new_id,
         "device_name": item_name,
@@ -130,6 +186,7 @@ def add_item():
         "fee_per_kg": item_fee_per_kg,
         "date_added": date_added
     }
+
     awems.append(item)
     save_data()
     print("\nItem added successfully.------------\n")
@@ -335,7 +392,7 @@ def generate_report():
                            f"Rs.{fee:.2f} | "
                            f"{item['storage_status']}\n")
 
-    report_content += "\n================================================\n"
+        report_content += "\n================================================\n"
 
     # print to screen
     print(report_content)
