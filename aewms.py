@@ -73,16 +73,18 @@ def save_data():
 
 # to show main menu
 def main_menu():
-    print("====== Welcome to E-Waste Management System ======"),
-    print("1. View all items"),
-    print("2. Add new item"),
-    print("3. Update item"),
-    print("4. Delete item"),
-    print("5. Search item"),
-    print("6. Calculate fee"),
-    print("7. Generate report"),
-    print("8. Hazardous items alert"),
-    print("9. Exit")
+    print("\n" + "="*20 + " GREEN LANTERN CORPS AEWMS " + "="*20)
+    print("1. View Current Inventory")
+    print("2. Add New E-Waste Item")
+    print("3. Update Existing Item")
+    print("4. Delete Item")
+    print("5. Search Item by ID")
+    print("6. Calculate Processing Fee")
+    print("7. Generate Storage Reports")
+    print("8. Check Hazardous Expiry (30 Days)")
+    print("9. Check Storage Capacity (80% Warning)")
+    print("10. Save & Exit")
+    print("="*67)
 
 # to automatically generate next item ID
 def generate_id():
@@ -264,8 +266,7 @@ def calculate_fee():
             weight = float(item["weight"])
             fee_per_kg = float(item["fee_per_kg"])
             fee = weight * fee_per_kg
-            if weight > 50:
-                fee *= 0.05  # Apply 5% surcharge for items over 50kg
+            if weight > 50 : fee *= 0.05  # Apply 5% surcharge for items over 50kg
 
             print("Total weight: ", weight, "kg")
             print("Fee per kg: ", fee_per_kg)
@@ -327,17 +328,17 @@ def generate_report():
             if item_date.year == today.year:
                 filtered.append(item)
 
-    # totals
+    # calculate totals
     total_items = len(filtered)
     total_weight = sum(item['weight'] for item in filtered)
     total_fee = sum(item['weight'] * item['fee_per_kg'] for item in filtered)
 
-    # category counts
+    # check category counts
     recyclable = len([i for i in filtered if i["category"] == "Recyclable"])
     hazardous = len([i for i in filtered if i["category"] == "Hazardous"])
     non_recyclable = len([i for i in filtered if i["category"] == "Non-Recyclable"])
 
-    # status counts
+    # check status count
     stored = len([i for i in filtered if i["storage_status"] == "Stored"])
     recycled = len([i for i in filtered if i["storage_status"] == "Recycled"])
     disposed = len([i for i in filtered if i["storage_status"] == "Disposed"])
@@ -353,7 +354,7 @@ def generate_report():
         report_label = "Yearly"
         period = today.strftime("%Y")
 
-    # build report
+    # to build the report
     report_content = f"""
                             ================================================
                             GREEN LANTERN CORPS AEWMS
@@ -394,10 +395,10 @@ def generate_report():
 
         report_content += "\n================================================\n"
 
-    # print to screen
+    # to show
     print(report_content)
 
-    # save to file
+    # to save to a file
     file_name = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
     with open(file_name, "w") as f:
         f.write(report_content)
@@ -406,35 +407,41 @@ def generate_report():
 
 # main selection logic
 while True:
-    main_menu()
-    check_hazard_alert()
-    choice = int(input("Enter Menu Item No: "))
-    # storage_check()
-    match choice:
-        case 1:
-            display_items()
-        case 2:
-            add_item()
-        case 3:
-            update_item()
-        case 4:
-            delete_item()
-        case 5:
-            search_item()
-        case 6:
-            calculate_fee()
-        case 7:
-            generate_report()
-        case 8:
-            check_hazard_alert()
-        case 9:
-            save_data()
-            print("Data saved successfully. Good Bye!!!\n")
-            exit()
-        case 10:
-            storage_check()
-        case _:
-            print("Invalid choice")
+    main_menu() # to show the main menu
+    
+    check_hazard_alert() # automatically check for hazardous items on every menu load
+    
+    try:
+        choice = int(input("Select an option (1-10): "))
+        
+        match choice:
+            case 1:
+                display_items()
+            case 2:
+                add_item()
+            case 3:
+                update_item()
+            case 4:
+                delete_item()
+            case 5:
+                search_item()
+            case 6:
+                calculate_fee()
+            case 7:
+                generate_report()
+            case 8:
+                check_hazard_alert() # to manually check
+            case 9:
+                storage_check()
+            case 10:
+                save_data()
+                print("Inventory saved to file. System shutting down. Goodbye!")
+                break
+            case _:
+                print("Invalid choice. Please select 1 through 10.")
+    
+    except ValueError:
+        print("Invalid input! Please enter a number between 1 and 10.")
 
 # //*def load_data():
 # //*def save_data():
