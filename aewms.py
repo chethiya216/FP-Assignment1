@@ -96,14 +96,49 @@ def generate_id():
         new_id = f"EW{new_id:03d}"
         return new_id
 
+def get_weight(item):
+    return float(item['weight'])
+
+def get_category(item):
+    return item['category']
 
 # to display all items
 def display_items():
     if len(awems) == 0:
         print("No items available.\n")
         return
-    print("\n--- Current Inventory ---")
-    for item in awems:
+
+    print("\n--- Display Options ---")
+    print("1. Default (Order Added)")
+    print("2. Sort by Weight (Highest to Lowest)")
+    print("3. Sort by Category")
+    sort_choice = input("Select an option (1-3): ")
+    
+    try:
+        while sort_choice not in ["1", "2", "3"]:
+            print("Invalid choice. Defaulting to option 1.")
+            sort_choice = "1"
+        sort_choice = int(sort_choice)
+    except ValueError:
+        print("Invalid input. Chose between 1 - 3.")
+        sort_choice = "1"
+
+    # to make a copy of awems list so that original list isnt affected 
+    display_list = list(awems)
+
+    match sort_choice:
+        case 1:
+            print("\n--- Current Inventory ---")
+        case 2:
+            display_list.sort(key= get_weight, reverse=True) # to make the list go from large numbers to small ones
+            print("\n--- Inventory Sorted by Weight (Heavy -> Light) ---")
+        case 3:
+            display_list.sort(key= get_category)
+            print("\n--- Inventory Sorted by Catagory ---")
+        case _:
+            print("Invalid choice. Defaulting to option 1.")
+
+    for item in display_list:
         print(f"Item ID: {item['item_id']} |",
               f"Name: {item['device_name']} |",
               f"Category: {item['category']} |",
