@@ -2,3 +2,4 @@ ew001|Battery|Hazardous|4.0|70.0|Stored|12/05/2026 -- 20:26:03
 ew002|Laptop|Recyclable|3.0|50.0|Stored|14/05/2026 -- 23:23:25
 ew003|Fan|Recyclable|7.0|50.0|Stored|14/05/2026 -- 23:33:47
 ew004|2|Hazardous|2.0|2.0|Stored|14/05/2026 -- 23:35:55
+EW005|Phone|Recyclable|0.5|50.0|Recycled|14/05/2026 -- 23:59:34
