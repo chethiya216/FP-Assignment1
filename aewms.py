@@ -510,7 +510,7 @@ def generate_report():
                            f"Rs.{fee:.2f} | "
                            f"{item['storage_status']}\n")
 
-        report_content += "\n================================================\n"
+    report_content += "\n================================================\n"
 
     # to show
     print(report_content)
