@@ -321,15 +321,13 @@ def calculate_fee():
         if item["item_id"] == item_id:
             weight = float(item["weight"])
             fee_per_kg = float(item["fee_per_kg"])
-            fee = weight * fee_per_kg
-            if weight > 50:
-                fee *= 0.05  # Apply 5% surcharge for items over 50kg
-
+            fee = weight * fee_per_kg  # Apply 5% surcharge for items over 50kg
             print("Total weight: ", weight, "kg")
             print("Fee per kg: ", fee_per_kg)
             if weight > 50:
-                fee += fee * 0.95  # Add surcharge to total fee
-                print("Surcharge applied: 5% for items over 50kg")
+                discount = fee * 0.05
+                fee -= discount
+                print("Discount applied: 5% for items over 50kg")
             print("Total payable fee Rs: ", fee, "\n")
             return
     print("\nItem not found.------------\n")
