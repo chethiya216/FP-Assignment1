@@ -317,20 +317,52 @@ def search_item():
 # to calculate fee for an item
 def calculate_fee():
     item_id = input("Enter item ID to calculate fee: ")
+    found = False
+
     for item in awems:
-        if item["item_id"] == item_id:
+        if item["item_id"].upper() == item_id:
+            found = True
+
             weight = float(item["weight"])
             fee_per_kg = float(item["fee_per_kg"])
-            fee = weight * fee_per_kg  # Apply 5% surcharge for items over 50kg
+            base_fee = weight * fee_per_kg
+
             print("Total weight: ", weight, "kg")
             print("Fee per kg: ", fee_per_kg)
+
+            discount = 0
+            final_fee = base_fee
+
             if weight > 50:
-                discount = fee * 0.05
-                fee -= discount
-                print("Discount applied: 5% for items over 50kg")
-            print("Total payable fee Rs: ", fee, "\n")
+                discount = base_fee * 0.05  # Apply 5% discount for bulk weight over 50kg
+                final_fee  = base_fee - discount
+
+            # --- RECEIPT ---
+            print("\n" + "*"*40)
+            print("      GREEN LANTERN CORPS RECYCLERS")
+            print("           OFFICIAL RECEIPT")
+            print("*"*40)
+            print(f"Date: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+            print(f"Item ID    : {item['item_id']}")
+            print(f"Device     : {item['device_name']}")
+            print(f"Category   : {item['category']}")
+            print("-" * 40)
+            print(f"Weight     : {weight:>20.2f} kg")
+            print(f"Rate/kg    : {fee_per_kg:>20.2f} Rs")
+            print(f"Base Fee   : {base_fee:>20.2f} Rs")
+
+            if discount > 0:
+                print(f"Bulk Disc. : -{discount:>19.2f} Rs (5%)")
+
+            print("-" * 40)
+            print(f"TOTAL DUE  : {final_fee:>20.2f} Rs")
+            print("*"*40)
+            print("    Thank you for recycling with us!")
+            print("*"*40 + "\n")
             return
-    print("\nItem not found.------------\n")
+
+    if not found:
+        print(f"\n[!] Error: Item ID '{item_id}' not found.\n")
 
 
 # to check hazardous items and alert if they are stored for over 30 days
