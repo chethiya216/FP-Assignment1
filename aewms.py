@@ -9,6 +9,8 @@ MAX_CAPACITY = 1000  # in kg
 today = datetime.now()
 
 # to load data from txt file when program starts
+
+
 def load_data():
     try:
         with open(File_Name, "r") as file:
@@ -31,11 +33,11 @@ def load_data():
         pass
 
 
-#to load data from txt file when program starts
+# to load data from txt file when program starts
 load_data()
 
 
-#to check storage capacity and alert if it is exceeded
+# to check storage capacity and alert if it is exceeded
 def storage_check():
     storage_capacity = 1000  # in kg
     storage = 0
@@ -57,11 +59,11 @@ def storage_check():
     print("================================\n")
 
 
-#to save data to txt file when program is closed
+# to save data to txt file when program is closed
 def save_data():
     with open(File_Name, "w") as file:
         for item in awems:
-            line = (f"{item['item_id'].lower()}|"
+            line = (f"{item['item_id']}|"
                     f"{item['device_name']}|"
                     f"{item['category']}|"
                     f"{item['weight']}|"
@@ -81,12 +83,15 @@ def main_menu():
     print("5. Search Item by ID or Device Name")
     print("6. Calculate Processing Fee")
     print("7. Generate Storage Reports")
-    print("8. Check Hazardous Expiry (30 Days)")
-    print("9. Check Storage Capacity (80% Warning)")
-    print("10. Save & Exit")
+    print("8. Mark Item as Recycled or Disposed")
+    print("9. Check Hazardous Expiry (30 Days)")
+    print("10. Check Storage Capacity (80% Warning)")
+    print("11. Save & Exit")
     print("="*67)
 
 # to automatically generate next item ID
+
+
 def generate_id():
     if len(awems) == 0:
         return "EW001"
@@ -96,13 +101,17 @@ def generate_id():
         new_id = f"EW{new_id:03d}"
         return new_id
 
+
 def get_weight(item):
     return float(item['weight'])
+
 
 def get_category(item):
     return item['category']
 
 # to display all items
+
+
 def display_items():
     if len(awems) == 0:
         print("No items available.\n")
@@ -113,7 +122,7 @@ def display_items():
     print("2. Sort by Weight (Highest to Lowest)")
     print("3. Sort by Category")
     sort_choice = input("Select an option (1-3): ")
-    
+
     try:
         while sort_choice not in ["1", "2", "3"]:
             print("Invalid choice. Defaulting to option 1.")
@@ -123,17 +132,18 @@ def display_items():
         print("Invalid input. Chose between 1 - 3.")
         sort_choice = "1"
 
-    # to make a copy of awems list so that original list isnt affected 
+    # to make a copy of awems list so that original list isnt affected
     display_list = list(awems)
 
     match sort_choice:
         case 1:
             print("\n--- Current Inventory ---")
         case 2:
-            display_list.sort(key= get_weight, reverse=True) # to make the list go from large numbers to small ones
+            # to make the list go from large numbers to small ones
+            display_list.sort(key=get_weight, reverse=True)
             print("\n--- Inventory Sorted by Weight (Heavy -> Light) ---")
         case 3:
-            display_list.sort(key= get_category)
+            display_list.sort(key=get_category)
             print("\n--- Inventory Sorted by Catagory ---")
         case _:
             print("Invalid choice. Defaulting to option 1.")
@@ -166,7 +176,8 @@ def add_item():
 
     while True:
         try:
-            item_category = int(input("Enter item category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) : "))
+            item_category = int(input(
+                "Enter item category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) : "))
             match item_category:
                 case 1:
                     item_category = "Recyclable"
@@ -181,26 +192,27 @@ def add_item():
                     print("Invalid category")
         except ValueError:
             print("Invalid Input. Enter a number.")
-            
-    item_storage_status = "Stored" # default storage status
+
+    item_storage_status = "Stored"  # default storage status
 
     current_total = sum(float(item['weight']) for item in awems)
     while True:
         try:
-            item_weight = float(input(f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {MAX_CAPACITY} kg): "))
+            item_weight = float(input(
+                f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {MAX_CAPACITY} kg): "))
             if item_weight <= 0:
                 print("Weight must be a positive number.")
                 continue
 
             if current_total + item_weight > MAX_CAPACITY:
-                print(f"Cannot add item. Adding this item would exceed the maximum storage capacity of {MAX_CAPACITY} kg.\n")
+                print(
+                    f"Cannot add item. Adding this item would exceed the maximum storage capacity of {MAX_CAPACITY} kg.\n")
                 storage_check()
                 return
             break
 
         except ValueError:
             print("Invalid weight. Please enter a number.")
-        
 
     while True:
         try:
@@ -227,6 +239,7 @@ def add_item():
     awems.append(item)
     save_data()
     print("\nItem added successfully.------------\n")
+
 
 def delete_item():
     item_id = input("Enter item ID to delete: ")
@@ -279,7 +292,8 @@ def update_item():
 
 
 def search_item():
-    search_text = input("Enter item ID or Item Name to search: ").strip().lower()
+    search_text = input(
+        "Enter item ID or Item Name to search: ").strip().lower()
     results = []
 
     for item in awems:
@@ -290,12 +304,12 @@ def search_item():
         print(f"Found {len(results)} matches.")
         for match in results:
             print(f"Item ID         : {match['item_id']} |",
-                    f"Name          : {match['device_name']} |", 
-                    f"Category      : {match['category']} |",
-                    f"Storage Status: {match['storage_status']} |",
-                    f"Weight        : {match['weight']} |",
-                    f"Fee per kg    : {match['fee_per_kg']} |",
-                    f"Date Added    : {match['date_added']}\n")
+                  f"Name          : {match['device_name']} |",
+                  f"Category      : {match['category']} |",
+                  f"Storage Status: {match['storage_status']} |",
+                  f"Weight        : {match['weight']} |",
+                  f"Fee per kg    : {match['fee_per_kg']} |",
+                  f"Date Added    : {match['date_added']}\n")
     else:
         print("\nNo matches found.------------\n")
 
@@ -308,7 +322,8 @@ def calculate_fee():
             weight = float(item["weight"])
             fee_per_kg = float(item["fee_per_kg"])
             fee = weight * fee_per_kg
-            if weight > 50 : fee *= 0.05  # Apply 5% surcharge for items over 50kg
+            if weight > 50:
+                fee *= 0.05  # Apply 5% surcharge for items over 50kg
 
             print("Total weight: ", weight, "kg")
             print("Fee per kg: ", fee_per_kg)
@@ -330,7 +345,36 @@ def check_hazard_alert():
             time_difference = (today - date_added).days
             if time_difference > 30:
                 print("\n--- Hazardous Waste Disposal Alerts (Over 30 Days) ---")
-                print(f"ALERT: Item {item['item_id']} ({item['device_name']}) Stored for {time_difference} days. Urgent disposal required!\n")
+                print(
+                    f"ALERT: Item {item['item_id']} ({item['device_name']}) Stored for {time_difference} days. Urgent disposal required!\n")
+
+
+def mark_item_status():
+    item_id = input("Enter item ID to mark: ")
+
+    while True:
+        try:
+            status_choice = int(input("Select new status (1. Recycled | 2. Disposed): "))
+            if status_choice in [1, 2]:
+                break
+            print("Enter a number between 1 and 2.")
+        except ValueError:
+            print("Invalid input! Please enter a number between 1 and 2.")
+
+    match status_choice:
+        case 1:
+            new_status = "Recycled"
+        case 2:
+            new_status = "Disposed"
+
+    for item in awems:
+        if item["item_id"] == item_id:
+            item["storage_status"] = new_status
+            save_data()
+            print(f"\nItem {item_id} marked as {new_status}.------------\n")
+            return
+    print("\nItem not found.------------\n")
+
 
 def generate_report():
     """Generate daily, monthly or yearly report."""
@@ -378,7 +422,8 @@ def generate_report():
     # check category counts
     recyclable = len([i for i in filtered if i["category"] == "Recyclable"])
     hazardous = len([i for i in filtered if i["category"] == "Hazardous"])
-    non_recyclable = len([i for i in filtered if i["category"] == "Non-Recyclable"])
+    non_recyclable = len(
+        [i for i in filtered if i["category"] == "Non-Recyclable"])
 
     # check status count
     stored = len([i for i in filtered if i["storage_status"] == "Stored"])
@@ -447,15 +492,16 @@ def generate_report():
 
     print(f"Report saved as: {file_name}\n")
 
+
 # main selection logic
 while True:
-    main_menu() # to show the main menu
-    
-    check_hazard_alert() # automatically check for hazardous items on every menu load
-    
+    main_menu()  # to show the main menu
+
+    check_hazard_alert()  # automatically check for hazardous items on every menu load
+
     try:
         choice = int(input("Select an option (1-10): "))
-        
+
         match choice:
             case 1:
                 display_items()
@@ -472,18 +518,20 @@ while True:
             case 7:
                 generate_report()
             case 8:
-                check_hazard_alert() # to manually check
+                mark_item_status()  # to manually mark items as recycled or disposed
             case 9:
-                storage_check()
+                check_hazard_alert()  # to manually check
             case 10:
+                storage_check()
+            case 11:
                 save_data()
                 print("Inventory saved to file. System shutting down. Goodbye!")
                 break
             case _:
-                print("Invalid choice. Please select 1 through 10.")
-    
+                print("Invalid choice. Please select 1 through 11.")
+
     except ValueError:
-        print("Invalid input! Please enter a number between 1 and 10.")
+        print("Invalid input! Please enter a number between 1 and 11.")
 
 # //*def load_data():
 # //*def save_data():
