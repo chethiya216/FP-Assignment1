@@ -121,17 +121,18 @@ def display_items():
     print("1. Default (Order Added)")
     print("2. Sort by Weight (Highest to Lowest)")
     print("3. Sort by Category")
-    sort_choice = input("Select an option (1-3): ")
 
-    try:
-        while sort_choice not in ["1", "2", "3"]:
-            print("Invalid choice. Defaulting to option 1.")
-            sort_choice = "1"
-        sort_choice = int(sort_choice)
-    except ValueError:
-        print("Invalid input. Chose between 1 - 3.")
+    sort_choice = input("Select an option (1-3): ").strip()
+
+    if sort_choice == "":
         sort_choice = "1"
 
+    if sort_choice not in ["1", "2", "3"]:
+        print("Invalid choice. Defaulting to option 1.")
+        sort_choice = "1"
+    else:
+        sort_choice = int(sort_choice)
+        
     # to make a copy of awems list so that original list isnt affected
     display_list = list(awems)
 
