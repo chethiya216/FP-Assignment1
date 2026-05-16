@@ -305,6 +305,10 @@ def delete_item():
     """
 
     item_id = input("Enter item ID to delete: ")
+    while item_id.strip() == "":
+        print("Item ID cannot be empty.")
+        item_id = input("Enter item ID to delete: ")
+
     for item in awems:
         if item["item_id"] == item_id:
             awems.remove(item)
@@ -482,7 +486,7 @@ def check_hazard_alert():
 
     limit = MAX_CAPACITY * 0.8
     print("\n--- Total Weight Accumulation by Category ---")
-    
+
     for category, total_weight in total_weight_per_category.items():
         percentage = (total_weight / MAX_CAPACITY) * 100
         print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}% of capacity)")
@@ -501,6 +505,9 @@ def mark_item_status():
     """
 
     item_id = input("Enter item ID to mark: ")
+    while item_id.strip() == "":
+        print("Item ID cannot be empty.")
+        item_id = input("Enter item ID to mark: ")
 
     while True:
         try:
