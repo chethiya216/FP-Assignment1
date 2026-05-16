@@ -12,6 +12,12 @@ today = datetime.now()
 
 
 def load_data():
+    """
+    Load all saved e-waste records from the txt file on program startup.
+    Reads each line, splits by '|', and stores as a dictionary in the awems list.
+    If the file does not exist, the program starts with an empty list.
+    """
+
     try:
         with open(File_Name, "r") as file:
             # awems.clear()
@@ -37,8 +43,13 @@ def load_data():
 load_data()
 
 
-# to check storage capacity and alert if it is exceeded
 def storage_check():
+    """
+    Check the current total storage usage against the maximum capacity of 1000kg.
+    Displays total used, total capacity, usage percentage, and available space.
+    Prints a warning if usage exceeds 80% and an alert if storage is completely full.
+    """
+
     storage_capacity = 1000  # in kg
     storage = 0
     total_storage = sum(float(item["weight"]) for item in awems)
@@ -61,6 +72,12 @@ def storage_check():
 
 # to save data to txt file when program is closed
 def save_data():
+    """
+    Save all current e-waste records to the txt file before program exit.
+    Each item is written as a single line with fields separated by '|'.
+    Ensures no data is lost between sessions.
+    """
+
     with open(File_Name, "w") as file:
         for item in awems:
             line = (f"{item['item_id']}|"
@@ -75,6 +92,11 @@ def save_data():
 
 # to show main menu
 def main_menu():
+    """
+    Display the main navigation menu for the Green Lantern Corps AEWMS.
+    Shows all available options numbered 1 through 11.
+    """
+
     print("\n" + "="*20 + " GREEN LANTERN CORPS AEWMS " + "="*20)
     print("1. View Current Inventory")
     print("2. Add New E-Waste Item")
@@ -93,6 +115,13 @@ def main_menu():
 
 
 def generate_id():
+    """
+    Automatically generate the next unique item ID in the format EW001, EW002, EW003.
+    Reads the last item ID in the list, extracts the number, increments by 1,
+    and returns the new ID formatted with leading zeros.
+    Returns 'EW001' if the list is empty.
+    """
+
     if len(awems) == 0:
         return "EW001"
     else:
@@ -103,16 +132,33 @@ def generate_id():
 
 
 def get_weight(item):
+    """
+    Return the weight of an item as a float.
+    Used as a key function for sorting items by weight.
+    """
+    
     return float(item['weight'])
 
 
 def get_category(item):
+    """
+    Return the category of an item as a string.
+    Used as a key function for sorting items alphabetically by category.
+    """
+
     return item['category']
 
-# to display all items
 
 
 def display_items():
+    """
+    Display all e-waste items currently stored in the system.
+    Offers three display options:
+        1. Default order (order items were added)
+        2. Sorted by weight from highest to lowest
+        3. Sorted by category alphabetically
+    Creates a copy of the list before sorting to not affect the original order.
+    """
     if len(awems) == 0:
         print("No items available.\n")
         return
@@ -161,6 +207,14 @@ def display_items():
 
 # to add items
 def add_item():
+    """
+    Add a new e-waste item to the system with full input validation.
+    Automatically generates item ID and sets storage status to 'Stored'.
+    Validates: item name (not empty), category (1-3 only), weight (positive number),
+    fee per kg (positive number), and storage capacity (blocks if full).
+    Saves updated records to file after successful addition.
+    """
+
     current_total = sum(float(item["weight"])for item in awems)
     if current_total >= MAX_CAPACITY:
         print("ALERT: Storage is FULL. Cannot add more items!\n")
@@ -243,6 +297,13 @@ def add_item():
 
 
 def delete_item():
+    """
+    Delete an existing e-waste item from the system by item ID.
+    Searches the list for a matching ID and removes it if found.
+    Saves updated records to file after successful deletion.
+    Prints an error message if the item ID is not found.
+    """
+
     item_id = input("Enter item ID to delete: ")
     for item in awems:
         if item["item_id"] == item_id:
@@ -254,6 +315,13 @@ def delete_item():
 
 
 def update_item():
+    """
+    Update the details of an existing e-waste item by item ID.
+    Allows updating: device name, category, storage status, weight, and fee per kg.
+    Leaving any field blank keeps the current value unchanged.
+    Saves updated records to file after successful update.
+    """
+
     item_id = input("Enter item ID to update: ")
     for item in awems:
         if item["item_id"] == item_id:
@@ -293,6 +361,12 @@ def update_item():
 
 
 def search_item():
+    """
+    Search for e-waste items by item ID or device name.
+    Performs a case-insensitive partial match search across both fields.
+    Displays all matching results or a not found message if no matches exist.
+    """
+
     search_text = input(
         "Enter item ID or Item Name to search: ").strip().lower()
     results = []
@@ -317,19 +391,23 @@ def search_item():
 
 # to calculate fee for an item
 def calculate_fee():
+    """
+    Calculate the recycling fee for a specific e-waste item by item ID.
+    Formula: Total Fee = Weight x Fee per kg.
+    Applies a 5% bulk discount if the item weight exceeds 50kg.
+    Displays a formatted receipt showing base fee, discount, and final total.
+    """
+
     item_id = input("Enter item ID to calculate fee: ")
     found = False
 
     for item in awems:
-        if item["item_id"].upper() == item_id:
+        if item["item_id"].upper() == item_id.upper():
             found = True
 
             weight = float(item["weight"])
             fee_per_kg = float(item["fee_per_kg"])
             base_fee = weight * fee_per_kg
-
-            print("Total weight: ", weight, "kg")
-            print("Fee per kg: ", fee_per_kg)
 
             discount = 0
             final_fee = base_fee
@@ -368,7 +446,15 @@ def calculate_fee():
 
 # to check hazardous items and alert if they are stored for over 30 days
 def check_hazard_alert():
+    """
+    Check all hazardous items currently in 'Stored' status.
+    Flags any hazardous item stored for more than 30 days as requiring urgent disposal.
+    Also calculates and displays total weight accumulation per category.
+    Warns if any category exceeds 80% of the maximum storage capacity.
+    """
+
     today = datetime.now()
+    found_hazard = False
     for item in awems:
         if item["category"].lower() == "hazardous" and item["storage_status"].lower() == "stored":
             date_string = item["date_added"].split(" -- ")[0]
@@ -378,9 +464,42 @@ def check_hazard_alert():
                 print("\n--- Hazardous Waste Disposal Alerts (Over 30 Days) ---")
                 print(
                     f"ALERT: Item {item['item_id']} ({item['device_name']}) Stored for {time_difference} days. Urgent disposal required!\n")
+                found_hazard = True
 
+    if not found_hazard:
+        print("No hazardous items found in storage for more than 30 days.")
+
+    # Calculate total weight per category
+    total_weight_per_category = {}
+
+    for item in awems:
+        category = item["category"]
+        weight = item["weight"]
+        if category in total_weight_per_category:
+            total_weight_per_category[category] += weight
+        else:
+            total_weight_per_category[category] = weight
+
+    limit = MAX_CAPACITY * 0.8
+    print("\n--- Total Weight Accumulation by Category ---")
+    
+    for category, total_weight in total_weight_per_category.items():
+        percentage = (total_weight / MAX_CAPACITY) * 100
+        print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}% of capacity)")
+
+        if percentage > 80:
+            print(f"WARNING: {category} exceeds 80% of maximum storage capacity!")
+    # Display total weight per category
+    print("=" * 45 + "\n")
 
 def mark_item_status():
+    """
+    Update the storage status of an e-waste item to 'Recycled' or 'Disposed'.
+    User enters the item ID and selects the new status from a numbered menu.
+    Saves updated records to file after successful status change.
+    Prints an error message if the item ID is not found.
+    """
+
     item_id = input("Enter item ID to mark: ")
 
     while True:
@@ -408,7 +527,14 @@ def mark_item_status():
 
 
 def generate_report():
-    """Generate daily, monthly or yearly report."""
+    """
+    Generate a summary report for a selected time period (Daily, Monthly, or Yearly).
+    Filters items from the awems list based on their date_added field.
+    Report includes: total items, total weight, total fees collected,
+    item counts by category, item counts by status, and individual item details.
+    Saves the report as a formatted txt file and prints it to the console.
+    """
+
     print("\n--- Green Lantern Corps Recyclers ---")
     print("1. Daily Report")
     print("2. Monthly Report")
