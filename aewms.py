@@ -531,7 +531,7 @@ while True:
     check_hazard_alert()  # automatically check for hazardous items on every menu load
 
     try:
-        choice = int(input("Select an option (1-10): "))
+        choice = int(input("Select an option (1-11): "))
 
         match choice:
             case 1:
