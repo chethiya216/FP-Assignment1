@@ -4,8 +4,8 @@ from datetime import datetime  # to get current date and time
 awems = []
 
 # txt file name
-File_Name = "awems_data.txt"
-MAX_CAPACITY = 1000  # in kg
+file_name = "awems_data.txt"
+max_capacity = 1000  # in kg
 today = datetime.now()
 
 # to load data from txt file when program starts
@@ -19,7 +19,7 @@ def load_data():
     """
 
     try:
-        with open(File_Name, "r") as file:
+        with open(file_name, "r") as file:
             # awems.clear()
             for line in file:
                 data = line.strip().split("|")
@@ -78,7 +78,7 @@ def save_data():
     Ensures no data is lost between sessions.
     """
 
-    with open(File_Name, "w") as file:
+    with open(file_name, "w") as file:
         for item in awems:
             line = (f"{item['item_id']}|"
                     f"{item['device_name']}|"
@@ -216,7 +216,7 @@ def add_item():
     """
 
     current_total = sum(float(item["weight"])for item in awems)
-    if current_total >= MAX_CAPACITY:
+    if current_total >= max_capacity:
         print("ALERT: Storage is FULL. Cannot add more items!\n")
         return
 
@@ -253,15 +253,13 @@ def add_item():
     current_total = sum(float(item['weight']) for item in awems)
     while True:
         try:
-            item_weight = float(input(
-                f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {MAX_CAPACITY} kg): "))
+            item_weight = float(input(f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {max_capacity} kg): "))
             if item_weight <= 0:
                 print("Weight must be a positive number.")
                 continue
 
-            if current_total + item_weight > MAX_CAPACITY:
-                print(
-                    f"Cannot add item. Adding this item would exceed the maximum storage capacity of {MAX_CAPACITY} kg.\n")
+            if current_total + item_weight > max_capacity:
+                print(f"Cannot add item. Adding this item would exceed the maximum storage capacity of {max_capacity} kg.\n")
                 storage_check()
                 return
             break
@@ -371,8 +369,7 @@ def search_item():
     Displays all matching results or a not found message if no matches exist.
     """
 
-    search_text = input(
-        "Enter item ID or Item Name to search: ").strip().lower()
+    search_text = input("Enter item ID or Item Name to search: ").strip().lower()
     results = []
 
     for item in awems:
@@ -466,12 +463,9 @@ def check_hazard_alert():
             time_difference = (today - date_added).days
             if time_difference > 30:
                 print("\n--- Hazardous Waste Disposal Alerts (Over 30 Days) ---")
-                print(
-                    f"ALERT: Item {item['item_id']} ({item['device_name']}) Stored for {time_difference} days. Urgent disposal required!\n")
+                print(f"ALERT: Item {item['item_id']} ({item['device_name']}) Stored for {time_difference} days. Urgent disposal required!\n")
                 found_hazard = True
 
-    if not found_hazard:
-        print("No hazardous items found in storage for more than 30 days.")
 
     # Calculate total weight per category
     total_weight_per_category = {}
@@ -484,17 +478,18 @@ def check_hazard_alert():
         else:
             total_weight_per_category[category] = weight
 
-    limit = MAX_CAPACITY * 0.8
+    limit = max_capacity * 0.8
     print("\n--- Total Weight Accumulation by Category ---")
 
     for category, total_weight in total_weight_per_category.items():
-        percentage = (total_weight / MAX_CAPACITY) * 100
+        percentage = (total_weight / max_capacity) * 100
         print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}% of capacity)")
 
         if percentage > 80:
             print(f"WARNING: {category} exceeds 80% of maximum storage capacity!")
     # Display total weight per category
     print("=" * 45 + "\n")
+
 
 def mark_item_status():
     """
@@ -631,11 +626,10 @@ def generate_report():
                             Recycled              : {recycled} items
                             Disposed              : {disposed} items
 
-                            ITEM DETAILS
-                            ------------
+                            ------ Item Details ------
                     """
-
     for item in filtered:
+
         fee = item['weight'] * item['fee_per_kg']
         report_content += (f"ID: {item['item_id']} | "
                            f"{item['device_name']} | "
