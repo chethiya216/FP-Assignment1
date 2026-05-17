@@ -490,6 +490,7 @@ def check_hazard_alert():
     # Display total weight per category
     print("=" * 45 + "\n")
 
+
 def mark_item_status():
     """
     Update the storage status of an e-waste item to 'Recycled' or 'Disposed'.
@@ -625,11 +626,10 @@ def generate_report():
                             Recycled              : {recycled} items
                             Disposed              : {disposed} items
 
-                            ITEM DETAILS
-                            ------------
+                            ------ Item Details ------
                     """
-
     for item in filtered:
+
         fee = item['weight'] * item['fee_per_kg']
         report_content += (f"ID: {item['item_id']} | "
                            f"{item['device_name']} | "
