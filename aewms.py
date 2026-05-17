@@ -446,7 +446,7 @@ def calculate_fee():
 
 
 # to check hazardous items and alert if they are stored for over 30 days
-def check_hazard_alert():
+def check_hazard_alert(automatic=False):
     """
     Check all hazardous items currently in 'Stored' status.
     Flags any hazardous item stored for more than 30 days as requiring urgent disposal.
@@ -456,39 +456,62 @@ def check_hazard_alert():
 
     today = datetime.now()
     found_hazard = False
+    hazard_alerts = []
+
+    # to process all hazards
     for item in awems:
+
         if item["category"].lower() == "hazardous" and item["storage_status"].lower() == "stored":
+
             date_string = item["date_added"].split(" -- ")[0]
             date_added = datetime.strptime(date_string, "%d/%m/%Y")
             time_difference = (today - date_added).days
+
             if time_difference > 30:
-                print("\n--- Hazardous Waste Disposal Alerts (Over 30 Days) ---")
-                print(f"ALERT: Item {item['item_id']} ({item['device_name']}) Stored for {time_difference} days. Urgent disposal required!\n")
+                hazard_alerts.append(
+                    f"ALERT: Item {item['item_id']} ({item['device_name']}) - {time_difference} days overdue! ")
                 found_hazard = True
 
-
-    # Calculate total weight per category
+    # to calculate total weight per category
     total_weight_per_category = {}
 
     for item in awems:
-        category = item["category"]
+        cat = item["category"]
         weight = item["weight"]
-        if category in total_weight_per_category:
-            total_weight_per_category[category] += weight
+        total_weight_per_category[cat] = total_weight_per_category.get(
+            cat, 0) + weight
+
+    # to handle whether automatic or manual check
+    if automatic:
+        # SILENT MODE: Only print if there is a problem
+        if found_hazard:
+            print("\n--- URGENT DISPOSAL REQUIRED ---")
+
+            for alert in hazard_alerts:
+                print(alert)
+
+        for category, total_weight in total_weight_per_category.items():
+            percentage = (total_weight / max_capacity) * 100
+
+            if percentage > 80:
+                print(
+                    f"WARNING: {category} exceeds 80% capacity ({percentage:.1f}%)")
+    else:
+        # to show everything in a detailed report when manually checking
+        print("\n" + "="*10 + " STORAGE & HAZARD REPORT " + "="*10)
+
+        if not found_hazard:
+            print("No overdue hazardous items.")
         else:
-            total_weight_per_category[category] = weight
+            for alert in hazard_alerts:
+                print(alert)
 
-    limit = max_capacity * 0.8
-    print("\n--- Total Weight Accumulation by Category ---")
+        print("\n--- Weight Breakdown ---")
+        for category, total_weight in total_weight_per_category.items():
+            percentage = (total_weight / max_capacity) * 100
+            print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}%)")
+        print("=" * 45 + "\n")
 
-    for category, total_weight in total_weight_per_category.items():
-        percentage = (total_weight / max_capacity) * 100
-        print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}% of capacity)")
-
-        if percentage > 80:
-            print(f"WARNING: {category} exceeds 80% of maximum storage capacity!")
-    # Display total weight per category
-    print("=" * 45 + "\n")
 
 
 def mark_item_status():
@@ -655,7 +678,7 @@ def generate_report():
 while True:
     main_menu()  # to show the main menu
 
-    check_hazard_alert()  # automatically check for hazardous items on every menu load
+    check_hazard_alert(automatic=True)  # automatically check for hazardous items on every menu load
 
     try:
         choice = int(input("Select an option (1-11): "))
