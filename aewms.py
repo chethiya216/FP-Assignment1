@@ -191,7 +191,7 @@ def display_items():
             print("\n--- Inventory Sorted by Weight (Heavy -> Light) ---")
         case 3:
             display_list.sort(key=get_category)
-            print("\n--- Inventory Sorted by Catagory ---")
+            print("\n--- Inventory Sorted by Category ---")
         case _:
             print("Invalid choice. Defaulting to option 1.")
 
