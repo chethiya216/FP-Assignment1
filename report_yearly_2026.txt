@@ -1,0 +1,33 @@
+
+                            ================================================
+                            GREEN LANTERN CORPS AEWMS
+                            Yearly Report - 2026
+                            Generated: 2026-05-17 21:00:27
+                            ================================================
+
+                            SUMMARY
+                            -------
+                            Total Items Collected : 5
+                            Total Weight          : 16.50 kg
+                            Total Fees Collected  : Rs. 809.00
+
+                            BY CATEGORY
+                            -----------
+                            Recyclable            : 3 items
+                            Hazardous             : 2 items
+                            Non-Recyclable        : 0 items
+
+                            BY STATUS
+                            ---------
+                            Stored                : 4 items
+                            Recycled              : 1 items
+                            Disposed              : 0 items
+
+                            --- Item Details ---        
+                    ID: ew001 | Battery | Hazardous | 4.0kg | Rs.280.00 | Stored
+ID: ew002 | Laptop | Recyclable | 3.0kg | Rs.150.00 | Stored
+ID: ew003 | Fan | Recyclable | 7.0kg | Rs.350.00 | Stored
+ID: ew004 | 2 | Hazardous | 2.0kg | Rs.4.00 | Stored
+ID: EW005 | Phone | Recyclable | 0.5kg | Rs.25.00 | Recycled
+
+================================================
