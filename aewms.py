@@ -505,7 +505,7 @@ def calculate_fee():
 
 
 # to check hazardous items and alert if they are stored for over 30 days
-def check_hazard_alert(automatic=False):
+def check_hazard_alert(automatic=False): # if atomatic = false then it will be called from main menu
     """
     Check all hazardous items currently in 'Stored' status.
     Flags any hazardous item stored for more than 30 days as requiring urgent disposal.
@@ -542,7 +542,7 @@ def check_hazard_alert(automatic=False):
 
     # to handle whether automatic or manual check
     if automatic:
-        # SILENT MODE: Only print if there is a problem
+        # to only print if there is a problem
         if found_hazard:
             print("\n--- URGENT DISPOSAL REQUIRED ---")
 
