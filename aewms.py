@@ -136,7 +136,7 @@ def get_weight(item):
     Return the weight of an item as a float.
     Used as a key function for sorting items by weight.
     """
-    
+
     return float(item['weight'])
 
 
@@ -147,7 +147,6 @@ def get_category(item):
     """
 
     return item['category']
-
 
 
 def display_items():
@@ -178,7 +177,7 @@ def display_items():
         sort_choice = "1"
     else:
         sort_choice = int(sort_choice)
-        
+
     # to make a copy of awems list so that original list isnt affected
     display_list = list(awems)
 
@@ -253,13 +252,15 @@ def add_item():
     current_total = sum(float(item['weight']) for item in awems)
     while True:
         try:
-            item_weight = float(input(f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {max_capacity} kg): "))
+            item_weight = float(input(
+                f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {max_capacity} kg): "))
             if item_weight <= 0:
                 print("Weight must be a positive number.")
                 continue
 
             if current_total + item_weight > max_capacity:
-                print(f"Cannot add item. Adding this item would exceed the maximum storage capacity of {max_capacity} kg.\n")
+                print(
+                    f"Cannot add item. Adding this item would exceed the maximum storage capacity of {max_capacity} kg.\n")
                 storage_check()
                 return
             break
@@ -323,43 +324,100 @@ def update_item():
     Leaving any field blank keeps the current value unchanged.
     Saves updated records to file after successful update.
     """
+    if not awems:
+        print("No items available to update.\n")
+        return
 
-    item_id = input("Enter item ID to update: ")
-    for item in awems:
-        if item["item_id"] == item_id:
-            print(f"Current Name: {item['device_name']}")
-            new_name = input("Enter new name (leave blank to keep current): ")
-            if new_name:
-                item["device_name"] = new_name
+    #loop until a valid item ID is entered or user cancels
+    while True:
+        item_id = input(
+            "Enter item ID to update (or type 'exit' to cancel): ").strip()
 
-            print(f"Current Category: {item['category']}")
-            new_category = input(
-                "Enter new category (leave blank to keep current): ")
-            if new_category:
-                item["category"] = new_category
-
-            print(f"Current Storage Status: {item['storage_status']}")
-            new_storage_status = input(
-                "Enter new storage status (leave blank to keep current): ")
-            if new_storage_status:
-                item["storage_status"] = new_storage_status
-
-            print(f"Current Weight: {item['weight']} kg")
-            new_weight_input = input(
-                "Enter new weight in kg (leave blank to keep current): ")
-            if new_weight_input:
-                item["weight"] = float(new_weight_input)
-
-            print(f"Current Fee per kg: {item['fee_per_kg']}")
-            new_fee_input = input(
-                "Enter new fee per kg (leave blank to keep current): ")
-            if new_fee_input:
-                item["fee_per_kg"] = float(new_fee_input)
-
-            save_data()
-            print("\nItem updated successfully.------------\n")
+        if item_id.lower() == 'exit':
+            print("Update cancelled.\n")
             return
-    print("\nItem not found.------------\n")
+
+        # to search for the item
+        found_item = None
+        for item in awems:
+            if item["item_id"].strip().lower() == item_id.lower():
+                found_item = item
+                break
+
+        if found_item:
+            break  # Item found, exit the loop
+        else:
+            print(f"Item with ID '{item_id}' not found. Please try again.\n")
+
+    # to show the updating field
+    print(
+        f"\nUpdating Item: {found_item['item_id']} - {found_item['device_name']}\n")
+
+    print(f"Current Name : {found_item['device_name']}")
+    new_name = input("Enter new name (leave blank to keep current): ").strip()
+    if new_name:
+        found_item["device_name"] = new_name
+
+    print(f"Current Category : {found_item['category']}")
+    new_category = input(
+        "Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
+    if new_category:
+        match new_category:
+            case "1":
+                new_category = "Recyclable"
+            case "2":
+                new_category = "Hazardous"
+            case "3":
+                new_category = "Non-Recyclable"
+            case _:
+                print("Invalid category input. Keeping old value.")
+                new_category = None
+    if new_category:
+        found_item["category"] = new_category
+
+    print(f"Current Status : {found_item['storage_status']}")
+    new_status = input("Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
+    if new_status:
+        match new_status:
+            case "1":
+                new_status = "Stored"
+            case "2":
+                new_status = "Recycled"
+            case "3":
+                new_status = "Disposed"
+            case _:
+                print("Invalid status input. Keeping old value.")
+                new_status = None
+    if new_status:
+        found_item["storage_status"] = new_status
+
+    print(f"Current Weight : {found_item['weight']} kg")
+    new_weight = input("Enter new weight in kg (leave blank to keep current): ").strip()
+    if new_weight:
+        try:
+            weight_value = float(new_weight)
+            if weight_value <= 0:
+                print("Warning: Weight must be positive. Keeping old value.")
+            else:
+                found_item["weight"] = weight_value
+        except ValueError:
+            print("Invalid weight input. Keeping old value.")
+
+    print(f"Current Fee per kg : {found_item['fee_per_kg']}")
+    new_fee = input(
+        "Enter new fee per kg (leave blank to keep current): ").strip()
+    if new_fee:
+        try:
+            fee_value = float(new_fee)
+            if fee_value <= 0:
+                print("Warning: Fee must be positive. Keeping old value.")
+            else:
+                found_item["fee_per_kg"] = fee_value
+        except ValueError:
+            print("Invalid fee input. Keeping old value.")
+
+    save_data()
+    print(f"\nItem {found_item['item_id']} updated successfully!\n")
 
 
 def search_item():
@@ -369,7 +427,8 @@ def search_item():
     Displays all matching results or a not found message if no matches exist.
     """
 
-    search_text = input("Enter item ID or Item Name to search: ").strip().lower()
+    search_text = input(
+        "Enter item ID or Item Name to search: ").strip().lower()
     results = []
 
     for item in awems:
@@ -403,7 +462,7 @@ def calculate_fee():
     found = False
 
     for item in awems:
-        if item["item_id"].upper() == item_id.upper():
+        if item["item_id"].lower() == item_id.lower():
             found = True
 
             weight = float(item["weight"])
@@ -415,7 +474,7 @@ def calculate_fee():
 
             if weight > 50:
                 discount = base_fee * 0.05  # Apply 5% discount for bulk weight over 50kg
-                final_fee  = base_fee - discount
+                final_fee = base_fee - discount
 
             # --- RECEIPT ---
             print("\n" + "*"*40)
@@ -513,7 +572,6 @@ def check_hazard_alert(automatic=False):
         print("=" * 45 + "\n")
 
 
-
 def mark_item_status():
     """
     Update the storage status of an e-waste item to 'Recycled' or 'Disposed'.
@@ -529,7 +587,8 @@ def mark_item_status():
 
     while True:
         try:
-            status_choice = int(input("Select new status (1. Recycled | 2. Disposed): "))
+            status_choice = int(
+                input("Select new status (1. Recycled | 2. Disposed): "))
             if status_choice in [1, 2]:
                 break
             print("Enter a number between 1 and 2.")
@@ -678,10 +737,11 @@ def generate_report():
 while True:
     main_menu()  # to show the main menu
 
-    check_hazard_alert(automatic=True)  # automatically check for hazardous items on every menu load
+    # automatically check for hazardous items on every menu load
+    check_hazard_alert(automatic=True)
 
     try:
-        choice = int(input("Select an option (1-11): "))
+        choice = int(input("\nSelect an option (1-11): "))
 
         match choice:
             case 1:
