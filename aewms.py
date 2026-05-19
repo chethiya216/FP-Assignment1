@@ -303,18 +303,34 @@ def delete_item():
     Prints an error message if the item ID is not found.
     """
 
+    if not awems:
+        print("No items found.")
+        return
+
     item_id = input("Enter item ID to delete: ")
+
     while item_id.strip() == "":
         print("Item ID cannot be empty.")
-        item_id = input("Enter item ID to delete: ")
+        item_id = input("Enter item ID to delete: ").strip()
 
-    for item in awems:
-        if item["item_id"] == item_id:
-            awems.remove(item)
-            save_data()
-            print("\nItem deleted successfully.------------\n")
-            return
-    print("\nItem not found.------------\n")
+    while item_id not in [item["item_id"] for item in awems]:
+        print("Item not found.")
+        item_id = input("Enter item ID to delete: ").strip()
+
+    print(f"Attempting to delete item with ID: {item_id}")
+    print("1.Confirm Deletion")
+    print("2.Cancel")
+
+    choice = input("Enter your choice: ").strip()
+    if choice == "1":
+        for item in awems:
+            if item["item_id"] == item_id:
+                awems.remove(item)
+                save_data()
+                print("\nItem deleted successfully.------------\n")
+                break
+    else:
+        print("Deletion cancelled.")
 
 
 def update_item():
@@ -328,7 +344,7 @@ def update_item():
         print("No items available to update.\n")
         return
 
-    #loop until a valid item ID is entered or user cancels
+    # loop until a valid item ID is entered or user cancels
     while True:
         item_id = input(
             "Enter item ID to update (or type 'exit' to cancel): ").strip()
@@ -376,7 +392,8 @@ def update_item():
         found_item["category"] = new_category
 
     print(f"Current Status : {found_item['storage_status']}")
-    new_status = input("Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
+    new_status = input(
+        "Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
     if new_status:
         match new_status:
             case "1":
@@ -392,7 +409,8 @@ def update_item():
         found_item["storage_status"] = new_status
 
     print(f"Current Weight : {found_item['weight']} kg")
-    new_weight = input("Enter new weight in kg (leave blank to keep current): ").strip()
+    new_weight = input(
+        "Enter new weight in kg (leave blank to keep current): ").strip()
     if new_weight:
         try:
             weight_value = float(new_weight)
