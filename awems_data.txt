@@ -1,0 +1,12 @@
+ew002|Laptop|Recyclable|3.0|50.0|Stored|14/05/2026 -- 23:23:25
+ew003|Fan|Recyclable|7.0|50.0|Stored|14/05/2026 -- 23:33:47
+ew004|2|Hazardous|2.0|2.0|Stored|14/05/2026 -- 23:35:55
+EW005|Phone|Recyclable|0.5|50.0|Recycled|14/05/2026 -- 23:59:34
+EW006|Laptop|Recyclable|2.5|150.0|Stored|17/05/2026 -- 21:07:00
+EW007|0.3|Recyclable|2.0|150.0|Stored|17/05/2026 -- 21:07:29
+EW008|Mobile Phone|Hazardous|0.3|200.0|Stored|17/03/2026 -- 21:07:50
+EW009|Printer|Non-Recyclable|5.0|100.0|Stored|17/05/2026 -- 21:08:04
+EW010|Desktop PC|Recyclable|8.0|120.0|Stored|17/05/2026 -- 21:08:20
+EW011|Battery Pack|Hazardous|15.0|250.0|Stored|17/03/2026 -- 21:08:36
+EW012|Television|Non-Recyclable|12.0|80.0|Stored|17/05/2026 -- 21:08:55
+EW013|Air Conditioner|Hazardous|20.0|180.0|Stored|17/05/2026 -- 21:09:17
