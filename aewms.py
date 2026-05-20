@@ -831,13 +831,5 @@ while True:
     except ValueError:
         print("Invalid input! Please enter a number between 1 and 11.")
 
-# //*def load_data():
-# //*def save_data():
-# //*def add_item():
-# //*def update_item():
-# //*def delete_item():
-# //*def search_item():
-# //*def calculate_fee():
-# //*def hazard_alert():
-# //*def check_storage():
-# //*def generate_report():
+    except Exception as e:
+        print(f"An error occurred: {e}")
