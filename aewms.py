@@ -4,8 +4,8 @@ from datetime import datetime  # to get current date and time
 awems = []
 
 # txt file name
-file_name = "awems_data.txt"
-max_capacity = 1000  # in kg
+FILE_NAME = "awems_data.txt"
+MAX_CAPACITY = 1000  # in kg
 today = datetime.now()
 
 # to load data from txt file when program starts
@@ -19,7 +19,7 @@ def load_data():
     """
 
     try:
-        with open(file_name, "r") as file:
+        with open(FILE_NAME, "r") as file:
             # awems.clear()
             for line in file:
                 data = line.strip().split("|")
@@ -77,7 +77,7 @@ def save_data():
     Ensures no data is lost between sessions.
     """
 
-    with open(file_name, "w") as file:
+    with open(FILE_NAME, "w") as file:
         for item in awems:
             line = (f"{item['item_id']}|"
                     f"{item['device_name']}|"
@@ -214,7 +214,7 @@ def add_item():
     """
 
     current_total = sum(float(item["weight"])for item in awems)
-    if current_total >= max_capacity:
+    if current_total >= MAX_CAPACITY:
         print("ALERT: Storage is FULL. Cannot add more items!\n")
         return
 
@@ -252,14 +252,14 @@ def add_item():
     while True:
         try:
             item_weight = float(input(
-                f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {max_capacity} kg): "))
+                f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {MAX_CAPACITY} kg): "))
             if item_weight <= 0:
                 print("Weight must be a positive number.")
                 continue
 
-            if current_total + item_weight > max_capacity:
+            if current_total + item_weight > MAX_CAPACITY:
                 print(
-                    f"Cannot add item. Adding this item would exceed the maximum storage capacity of {max_capacity} kg.\n")
+                    f"Cannot add item. Adding this item would exceed the maximum storage capacity of {MAX_CAPACITY} kg.\n")
                 storage_check()
                 return
             break
@@ -593,7 +593,7 @@ def check_hazard_alert(automatic=False):
                 print(alert)
 
         for category, total_weight in total_weight_per_category.items():
-            percentage = (total_weight / max_capacity) * 100
+            percentage = (total_weight / MAX_CAPACITY) * 100
 
             if percentage > 80:
                 print(
@@ -610,7 +610,7 @@ def check_hazard_alert(automatic=False):
 
         print("\n--- Weight Breakdown ---")
         for category, total_weight in total_weight_per_category.items():
-            percentage = (total_weight / max_capacity) * 100
+            percentage = (total_weight / MAX_CAPACITY) * 100
             print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}%)")
         print("=" * 45 + "\n")
 
@@ -785,11 +785,11 @@ Disposed              : {disposed} items
     print(report_content)
 
     # to save to file
-    file_name = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
-    with open(file_name, "w") as f:
+    FILE_NAME = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
+    with open(FILE_NAME, "w") as f:
         f.write(report_content)
 
-    print(f"Report saved as: {file_name}\n")
+    print(f"Report saved as: {FILE_NAME}\n")
 
 # main selection logic
 while True:
