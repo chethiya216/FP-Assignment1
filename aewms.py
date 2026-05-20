@@ -527,10 +527,15 @@ def calculate_fee():
 # to check hazardous items and alert if they are stored for over 30 days
 def check_hazard_alert(automatic=False):
     """
-    Check all hazardous items currently in 'Stored' status.
-    Flags any hazardous item stored for more than 30 days as requiring urgent disposal.
-    Also calculates and displays total weight accumulation per category.
-    Warns if any category exceeds 80% of the maximum storage capacity.
+    Check hazardous items stored for more than 30 days and display warning alerts.
+
+    The function also calculates the total weight for each category and warns
+    if any category exceeds 80% of the maximum storage capacity.
+
+    Parameters:
+        automatic (bool):
+            True  - Shows only important alerts and warnings.
+            False - Shows a full hazard and storage report.
     """
 
     today = datetime.now()
