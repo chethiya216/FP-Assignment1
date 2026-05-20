@@ -6,7 +6,6 @@ awems = []
 # txt file name
 FILE_NAME = "awems_data.txt"
 MAX_CAPACITY = 1000  # in kg
-today = datetime.now()
 
 # to load data from txt file when program starts
 
