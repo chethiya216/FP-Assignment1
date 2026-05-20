@@ -492,8 +492,11 @@ def calculate_fee():
     Applies a 5% bulk discount if the item weight exceeds 50kg.
     Displays a formatted receipt showing base fee, discount, and final total.
     """
+    if not awems:
+        print("No items available to calculate fee.\n")
+        return
 
-    item_id = input("Enter item ID to calculate fee: ")
+    item_id = input("Enter item ID to calculate fee: ").strip()
     found = False
 
     for item in awems:
