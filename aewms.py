@@ -666,6 +666,9 @@ def generate_report():
     item counts by category, item counts by status, and individual item details.
     Saves the report as a formatted txt file and prints it to the console.
     """
+    if not awems:
+        print("No items available to generate report.\n")
+        return
 
     print("\n--- Green Lantern Corps Recyclers ---")
     print("1. Daily Report")
@@ -674,14 +677,14 @@ def generate_report():
 
     while True:
         try:
-            report_type = int(input("Select report type: "))
+            report_type = int(input("Select report type: ").strip())
             if report_type in [1, 2, 3]:
                 break
             print("Enter 1, 2 or 3.")
         except ValueError:
             print("Enter a valid number.")
 
-    filtered = []
+    report_data = []
     today = datetime.now()
 
     for item in awems:
@@ -692,34 +695,34 @@ def generate_report():
             if (item_date.day == today.day and
                     item_date.month == today.month and
                     item_date.year == today.year):
-                filtered.append(item)
+                report_data.append(item)
 
         elif report_type == 2:
             if (item_date.month == today.month and
                     item_date.year == today.year):
-                filtered.append(item)
+                report_data.append(item)
 
         elif report_type == 3:
             if item_date.year == today.year:
-                filtered.append(item)
+                report_data.append(item)
 
-    # calculate totals
-    total_items = len(filtered)
-    total_weight = sum(item['weight'] for item in filtered)
-    total_fee = sum(item['weight'] * item['fee_per_kg'] for item in filtered)
+    # to calculate totals
+    total_items = len(report_data)
+    total_weight = sum(item['weight'] for item in report_data)
+    total_fee = sum(item['weight'] * item['fee_per_kg'] for item in report_data)
 
-    # check category counts
-    recyclable = len([i for i in filtered if i["category"] == "Recyclable"])
-    hazardous = len([i for i in filtered if i["category"] == "Hazardous"])
+    # to check category counts
+    recyclable = len([i for i in report_data if i["category"] == "Recyclable"])
+    hazardous = len([i for i in report_data if i["category"] == "Hazardous"])
     non_recyclable = len(
-        [i for i in filtered if i["category"] == "Non-Recyclable"])
+        [i for i in report_data if i["category"] == "Non-Recyclable"])
 
-    # check status count
-    stored = len([i for i in filtered if i["storage_status"] == "Stored"])
-    recycled = len([i for i in filtered if i["storage_status"] == "Recycled"])
-    disposed = len([i for i in filtered if i["storage_status"] == "Disposed"])
+    # to check status count
+    stored = len([i for i in report_data if i["storage_status"] == "Stored"])
+    recycled = len([i for i in report_data if i["storage_status"] == "Recycled"])
+    disposed = len([i for i in report_data if i["storage_status"] == "Disposed"])
 
-    # report label and period
+    # to select report label and period
     if report_type == 1:
         report_label = "Daily"
         period = today.strftime("%Y-%m-%d")
@@ -731,55 +734,62 @@ def generate_report():
         period = today.strftime("%Y")
 
     # to build the report
+    separator = "=" * 80
     report_content = f"""
-                            ================================================
-                            GREEN LANTERN CORPS AEWMS
-                            {report_label} Report - {period}
-                            Generated: {today.strftime("%Y-%m-%d %H:%M:%S")}
-                            ================================================
+{separator}
+                    GREEN LANTERN CORPS AEWMS
+                    {report_label} Report - {period}
+                    Generated: {today.strftime("%Y-%m-%d %H:%M:%S")}
+{separator}
 
-                            SUMMARY
-                            -------
-                            Total Items Collected : {total_items}
-                            Total Weight          : {total_weight:.2f} kg
-                            Total Fees Collected  : Rs. {total_fee:.2f}
+SUMMARY
+-------
+Total Items Collected : {total_items}
+Total Weight          : {total_weight:.2f} kg
+Total Fees Collected  : Rs. {total_fee:.2f}
 
-                            BY CATEGORY
-                            -----------
-                            Recyclable            : {recyclable} items
-                            Hazardous             : {hazardous} items
-                            Non-Recyclable        : {non_recyclable} items
+BY CATEGORY
+-----------
+Recyclable            : {recyclable} items
+Hazardous             : {hazardous} items
+Non-Recyclable        : {non_recyclable} items
 
-                            BY STATUS
-                            ---------
-                            Stored                : {stored} items
-                            Recycled              : {recycled} items
-                            Disposed              : {disposed} items
+BY STATUS
+---------
+Stored                : {stored} items
+Recycled              : {recycled} items
+Disposed              : {disposed} items
 
-                            ------ Item Details ------
-                    """
-    for item in filtered:
+{separator}
+                         ITEM DETAILS
+{separator}
+"""
 
+    # to add column headers
+    report_content += f"{'ID':<8} {'Device Name':<20} {'Category':<15} {'Weight':<8} {'Fee (Rs.)':<12} {'Status':<10}\n"
+    report_content += "-" * 80 + "\n"
+
+    # to add each item with fixed column widths
+    for item in report_data:
         fee = item['weight'] * item['fee_per_kg']
-        report_content += (f"ID: {item['item_id']} | "
-                           f"{item['device_name']} | "
-                           f"{item['category']} | "
-                           f"{item['weight']}kg | "
-                           f"Rs.{fee:.2f} | "
-                           f"{item['storage_status']}\n")
+        report_content += (f"{item['item_id']:<8} "
+                           f"{item['device_name']:<20} "
+                           f"{item['category']:<15} "
+                           f"{item['weight']:<8.2f} "
+                           f"{fee:<12.2f} "
+                           f"{item['storage_status']:<10}\n")
 
-    report_content += "\n================================================\n"
+    report_content += f"\n{separator}\n"
 
-    # to show
+    # to display report
     print(report_content)
 
-    # to save to a file
+    # to save to file
     file_name = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
     with open(file_name, "w") as f:
         f.write(report_content)
 
     print(f"Report saved as: {file_name}\n")
-
 
 # main selection logic
 while True:
