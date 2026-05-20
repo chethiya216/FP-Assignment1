@@ -452,8 +452,18 @@ def search_item():
     Displays all matching results or a not found message if no matches exist.
     """
 
+    if not awems:
+        print("No items available to search.\n")
+        return
+
     search_text = input(
         "Enter item ID or Item Name to search: ").strip().lower()
+
+    while search_text == "":
+        print("Search text cannot be empty.\n")
+        search_text = input(
+            "Enter item ID or Item Name to search: ").strip().lower()
+
     results = []
 
     for item in awems:
