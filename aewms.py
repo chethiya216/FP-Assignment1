@@ -51,7 +51,6 @@ def storage_check():
     """
 
     storage_capacity = 1000  # in kg
-    storage = 0
     total_storage = sum(float(item["weight"]) for item in awems)
     percentage = (total_storage / storage_capacity) * 100
     print(f"\n=== STORAGE CAPACITY STATUS ===")
