@@ -784,11 +784,11 @@ Disposed              : {disposed} items
     print(report_content)
 
     # to save to file
-    FILE_NAME = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
-    with open(FILE_NAME, "w") as f:
+    report_filename = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
+    with open(report_filename, "w") as f:
         f.write(report_content)
 
-    print(f"Report saved as: {FILE_NAME}\n")
+    print(f"Report saved as: {report_filename}\n")
 
 # main selection logic
 while True:
