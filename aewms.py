@@ -4,9 +4,8 @@ from datetime import datetime  # to get current date and time
 awems = []
 
 # txt file name
-file_name = "awems_data.txt"
-max_capacity = 1000  # in kg
-today = datetime.now()
+FILE_NAME = "awems_data.txt"
+MAX_CAPACITY = 1000  # in kg
 
 # to load data from txt file when program starts
 
@@ -19,7 +18,7 @@ def load_data():
     """
 
     try:
-        with open(file_name, "r") as file:
+        with open(FILE_NAME, "r") as file:
             # awems.clear()
             for line in file:
                 data = line.strip().split("|")
@@ -50,20 +49,19 @@ def storage_check():
     Prints a warning if usage exceeds 80% and an alert if storage is completely full.
     """
 
-    storage_capacity = 1000  # in kg
-    storage = 0
+    # storage_capacity = 1000  # in kg
     total_storage = sum(float(item["weight"]) for item in awems)
-    percentage = (total_storage / storage_capacity) * 100
+    percentage = (total_storage / MAX_CAPACITY) * 100
     print(f"\n=== STORAGE CAPACITY STATUS ===")
     print(f"Total Used    : {total_storage:.2f} kg")
-    print(f"Total Capacity: {storage_capacity} kg")
+    print(f"Total Capacity: {MAX_CAPACITY} kg")
     print(f"Usage         : {percentage:.1f}%")
-    print(f"Available     : {storage_capacity - total_storage:.2f} kg")
+    print(f"Available     : {MAX_CAPACITY - total_storage:.2f} kg")
 
     # warn if over 80%
-    if total_storage >= storage_capacity:
+    if total_storage >= MAX_CAPACITY:
         print("ALERT: Storage is FULL. Cannot add more items!")
-    elif total_storage > (storage_capacity * 0.8):
+    elif total_storage > (MAX_CAPACITY * 0.8):
         print("WARNING: Storage exceeds 80% capacity!")
     else:
         print("Storage level is normal.")
@@ -78,7 +76,7 @@ def save_data():
     Ensures no data is lost between sessions.
     """
 
-    with open(file_name, "w") as file:
+    with open(FILE_NAME, "w") as file:
         for item in awems:
             line = (f"{item['item_id']}|"
                     f"{item['device_name']}|"
@@ -215,7 +213,7 @@ def add_item():
     """
 
     current_total = sum(float(item["weight"])for item in awems)
-    if current_total >= max_capacity:
+    if current_total >= MAX_CAPACITY:
         print("ALERT: Storage is FULL. Cannot add more items!\n")
         return
 
@@ -253,14 +251,14 @@ def add_item():
     while True:
         try:
             item_weight = float(input(
-                f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {max_capacity} kg): "))
+                f"Enter item weight in kg (Current total: {current_total} kg / Maximum capacity: {MAX_CAPACITY} kg): "))
             if item_weight <= 0:
                 print("Weight must be a positive number.")
                 continue
 
-            if current_total + item_weight > max_capacity:
+            if current_total + item_weight > MAX_CAPACITY:
                 print(
-                    f"Cannot add item. Adding this item would exceed the maximum storage capacity of {max_capacity} kg.\n")
+                    f"Cannot add item. Adding this item would exceed the maximum storage capacity of {MAX_CAPACITY} kg.\n")
                 storage_check()
                 return
             break
@@ -346,8 +344,7 @@ def update_item():
 
     # loop until a valid item ID is entered or user cancels
     while True:
-        item_id = input(
-            "Enter item ID to update (or type 'exit' to cancel): ").strip()
+        item_id = input("Enter item ID to update (or type 'exit' to cancel): ").strip()
 
         if item_id.lower() == 'exit':
             print("Update cancelled.\n")
@@ -375,8 +372,10 @@ def update_item():
         found_item["device_name"] = new_name
 
     print(f"Current Category : {found_item['category']}")
-    new_category = input(
-        "Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
+    new_category = input("Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
+    while new_category and new_category not in ["1", "2", "3"]:
+        print("Invalid category input. Please enter 1, 2, or 3.")
+        new_category = input("Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
     if new_category:
         match new_category:
             case "1":
@@ -392,8 +391,10 @@ def update_item():
         found_item["category"] = new_category
 
     print(f"Current Status : {found_item['storage_status']}")
-    new_status = input(
-        "Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
+    new_status = input("Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
+    while new_status and new_status not in ["1", "2", "3"]:
+        print("Invalid status input. Please enter 1, 2, or 3.")
+        new_status = input("Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
     if new_status:
         match new_status:
             case "1":
@@ -409,21 +410,25 @@ def update_item():
         found_item["storage_status"] = new_status
 
     print(f"Current Weight : {found_item['weight']} kg")
-    new_weight = input(
-        "Enter new weight in kg (leave blank to keep current): ").strip()
+    new_weight = input( "Enter new weight in kg (leave blank to keep current): ").strip()
     if new_weight:
         try:
             weight_value = float(new_weight)
             if weight_value <= 0:
                 print("Warning: Weight must be positive. Keeping old value.")
             else:
+                # found_item["weight"] = weight_value
+                current_total = sum(float(item['weight']) for item in awems) - found_item["weight"] + weight_value
+                if current_total >= MAX_CAPACITY:
+                    print(
+                        "ALERT: Cannot update weight – storage would exceed maximum capacity!")
+                    return
                 found_item["weight"] = weight_value
         except ValueError:
             print("Invalid weight input. Keeping old value.")
-
+    
     print(f"Current Fee per kg : {found_item['fee_per_kg']}")
-    new_fee = input(
-        "Enter new fee per kg (leave blank to keep current): ").strip()
+    new_fee = input("Enter new fee per kg (leave blank to keep current): ").strip()
     if new_fee:
         try:
             fee_value = float(new_fee)
@@ -445,8 +450,18 @@ def search_item():
     Displays all matching results or a not found message if no matches exist.
     """
 
+    if not awems:
+        print("No items available to search.\n")
+        return
+
     search_text = input(
         "Enter item ID or Item Name to search: ").strip().lower()
+
+    while search_text == "":
+        print("Search text cannot be empty.\n")
+        search_text = input(
+            "Enter item ID or Item Name to search: ").strip().lower()
+
     results = []
 
     for item in awems:
@@ -475,8 +490,11 @@ def calculate_fee():
     Applies a 5% bulk discount if the item weight exceeds 50kg.
     Displays a formatted receipt showing base fee, discount, and final total.
     """
+    if not awems:
+        print("No items available to calculate fee.\n")
+        return
 
-    item_id = input("Enter item ID to calculate fee: ")
+    item_id = input("Enter item ID to calculate fee: ").strip()
     found = False
 
     for item in awems:
@@ -525,10 +543,15 @@ def calculate_fee():
 # to check hazardous items and alert if they are stored for over 30 days
 def check_hazard_alert(automatic=False):
     """
-    Check all hazardous items currently in 'Stored' status.
-    Flags any hazardous item stored for more than 30 days as requiring urgent disposal.
-    Also calculates and displays total weight accumulation per category.
-    Warns if any category exceeds 80% of the maximum storage capacity.
+    Check hazardous items stored for more than 30 days and display warning alerts.
+
+    The function also calculates the total weight for each category and warns
+    if any category exceeds 80% of the maximum storage capacity.
+
+    Parameters:
+        automatic (bool):
+            True  - Shows only important alerts and warnings.
+            False - Shows a full hazard and storage report.
     """
 
     today = datetime.now()
@@ -568,7 +591,7 @@ def check_hazard_alert(automatic=False):
                 print(alert)
 
         for category, total_weight in total_weight_per_category.items():
-            percentage = (total_weight / max_capacity) * 100
+            percentage = (total_weight / MAX_CAPACITY) * 100
 
             if percentage > 80:
                 print(
@@ -585,7 +608,7 @@ def check_hazard_alert(automatic=False):
 
         print("\n--- Weight Breakdown ---")
         for category, total_weight in total_weight_per_category.items():
-            percentage = (total_weight / max_capacity) * 100
+            percentage = (total_weight / MAX_CAPACITY) * 100
             print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}%)")
         print("=" * 45 + "\n")
 
@@ -598,15 +621,23 @@ def mark_item_status():
     Prints an error message if the item ID is not found.
     """
 
-    item_id = input("Enter item ID to mark: ")
-    while item_id.strip() == "":
+    if not awems:
+        print("No items found.")
+        return
+
+    item_id = input("Enter item ID to mark: ").lower().strip()
+
+    while item_id == "":
         print("Item ID cannot be empty.")
-        item_id = input("Enter item ID to mark: ")
+        item_id = input("Enter item ID to mark: ").strip().lower()
+
+    while item_id not in [item["item_id"].lower() for item in awems]:
+        print(f"Item with ID '{item_id}' not found. Please try again.\n")
+        item_id = input("Enter item ID to mark: ").strip().lower()
 
     while True:
         try:
-            status_choice = int(
-                input("Select new status (1. Recycled | 2. Disposed): "))
+            status_choice = int(input("Select new status (1. Recycled | 2. Disposed): "))
             if status_choice in [1, 2]:
                 break
             print("Enter a number between 1 and 2.")
@@ -620,12 +651,11 @@ def mark_item_status():
             new_status = "Disposed"
 
     for item in awems:
-        if item["item_id"] == item_id:
+        if item["item_id"].lower().strip() == item_id.lower().strip():
             item["storage_status"] = new_status
             save_data()
             print(f"\nItem {item_id} marked as {new_status}.------------\n")
-            return
-    print("\nItem not found.------------\n")
+            return   
 
 
 def generate_report():
@@ -636,6 +666,9 @@ def generate_report():
     item counts by category, item counts by status, and individual item details.
     Saves the report as a formatted txt file and prints it to the console.
     """
+    if not awems:
+        print("No items available to generate report.\n")
+        return
 
     print("\n--- Green Lantern Corps Recyclers ---")
     print("1. Daily Report")
@@ -644,14 +677,14 @@ def generate_report():
 
     while True:
         try:
-            report_type = int(input("Select report type: "))
+            report_type = int(input("Select report type: ").strip())
             if report_type in [1, 2, 3]:
                 break
             print("Enter 1, 2 or 3.")
         except ValueError:
             print("Enter a valid number.")
 
-    filtered = []
+    report_data = []
     today = datetime.now()
 
     for item in awems:
@@ -662,34 +695,34 @@ def generate_report():
             if (item_date.day == today.day and
                     item_date.month == today.month and
                     item_date.year == today.year):
-                filtered.append(item)
+                report_data.append(item)
 
         elif report_type == 2:
             if (item_date.month == today.month and
                     item_date.year == today.year):
-                filtered.append(item)
+                report_data.append(item)
 
         elif report_type == 3:
             if item_date.year == today.year:
-                filtered.append(item)
+                report_data.append(item)
 
-    # calculate totals
-    total_items = len(filtered)
-    total_weight = sum(item['weight'] for item in filtered)
-    total_fee = sum(item['weight'] * item['fee_per_kg'] for item in filtered)
+    # to calculate totals
+    total_items = len(report_data)
+    total_weight = sum(item['weight'] for item in report_data)
+    total_fee = sum(item['weight'] * item['fee_per_kg'] for item in report_data)
 
-    # check category counts
-    recyclable = len([i for i in filtered if i["category"] == "Recyclable"])
-    hazardous = len([i for i in filtered if i["category"] == "Hazardous"])
+    # to check category counts
+    recyclable = len([i for i in report_data if i["category"] == "Recyclable"])
+    hazardous = len([i for i in report_data if i["category"] == "Hazardous"])
     non_recyclable = len(
-        [i for i in filtered if i["category"] == "Non-Recyclable"])
+        [i for i in report_data if i["category"] == "Non-Recyclable"])
 
-    # check status count
-    stored = len([i for i in filtered if i["storage_status"] == "Stored"])
-    recycled = len([i for i in filtered if i["storage_status"] == "Recycled"])
-    disposed = len([i for i in filtered if i["storage_status"] == "Disposed"])
+    # to check status count
+    stored = len([i for i in report_data if i["storage_status"] == "Stored"])
+    recycled = len([i for i in report_data if i["storage_status"] == "Recycled"])
+    disposed = len([i for i in report_data if i["storage_status"] == "Disposed"])
 
-    # report label and period
+    # to select report label and period
     if report_type == 1:
         report_label = "Daily"
         period = today.strftime("%Y-%m-%d")
@@ -701,55 +734,62 @@ def generate_report():
         period = today.strftime("%Y")
 
     # to build the report
+    separator = "=" * 80
     report_content = f"""
-                            ================================================
-                            GREEN LANTERN CORPS AEWMS
-                            {report_label} Report - {period}
-                            Generated: {today.strftime("%Y-%m-%d %H:%M:%S")}
-                            ================================================
+{separator}
+                    GREEN LANTERN CORPS AEWMS
+                    {report_label} Report - {period}
+                    Generated: {today.strftime("%Y-%m-%d %H:%M:%S")}
+{separator}
 
-                            SUMMARY
-                            -------
-                            Total Items Collected : {total_items}
-                            Total Weight          : {total_weight:.2f} kg
-                            Total Fees Collected  : Rs. {total_fee:.2f}
+SUMMARY
+-------
+Total Items Collected : {total_items}
+Total Weight          : {total_weight:.2f} kg
+Total Fees Collected  : Rs. {total_fee:.2f}
 
-                            BY CATEGORY
-                            -----------
-                            Recyclable            : {recyclable} items
-                            Hazardous             : {hazardous} items
-                            Non-Recyclable        : {non_recyclable} items
+BY CATEGORY
+-----------
+Recyclable            : {recyclable} items
+Hazardous             : {hazardous} items
+Non-Recyclable        : {non_recyclable} items
 
-                            BY STATUS
-                            ---------
-                            Stored                : {stored} items
-                            Recycled              : {recycled} items
-                            Disposed              : {disposed} items
+BY STATUS
+---------
+Stored                : {stored} items
+Recycled              : {recycled} items
+Disposed              : {disposed} items
 
-                            ------ Item Details ------
-                    """
-    for item in filtered:
+{separator}
+                         ITEM DETAILS
+{separator}
+"""
 
+    # to add column headers
+    report_content += f"{'ID':<8} {'Device Name':<20} {'Category':<15} {'Weight':<8} {'Fee (Rs.)':<12} {'Status':<10}\n"
+    report_content += "-" * 80 + "\n"
+
+    # to add each item with fixed column widths
+    for item in report_data:
         fee = item['weight'] * item['fee_per_kg']
-        report_content += (f"ID: {item['item_id']} | "
-                           f"{item['device_name']} | "
-                           f"{item['category']} | "
-                           f"{item['weight']}kg | "
-                           f"Rs.{fee:.2f} | "
-                           f"{item['storage_status']}\n")
+        report_content += (f"{item['item_id']:<8} "
+                           f"{item['device_name']:<20} "
+                           f"{item['category']:<15} "
+                           f"{item['weight']:<8.2f} "
+                           f"{fee:<12.2f} "
+                           f"{item['storage_status']:<10}\n")
 
-    report_content += "\n================================================\n"
+    report_content += f"\n{separator}\n"
 
-    # to show
+    # to display report
     print(report_content)
 
-    # to save to a file
-    file_name = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
-    with open(file_name, "w") as f:
+    # to save to file
+    report_filename = f"report_{report_label.lower()}_{period.replace(' ', '_')}.txt"
+    with open(report_filename, "w") as f:
         f.write(report_content)
 
-    print(f"Report saved as: {file_name}\n")
-
+    print(f"Report saved as: {report_filename}\n")
 
 # main selection logic
 while True:
@@ -792,13 +832,5 @@ while True:
     except ValueError:
         print("Invalid input! Please enter a number between 1 and 11.")
 
-# //*def load_data():
-# //*def save_data():
-# //*def add_item():
-# //*def update_item():
-# //*def delete_item():
-# //*def search_item():
-# //*def calculate_fee():
-# //*def hazard_alert():
-# //*def check_storage():
-# //*def generate_report():
+    except Exception as e:
+        print(f"An error occurred: {e}")
