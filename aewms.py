@@ -625,16 +625,19 @@ def mark_item_status():
         print("No items found.")
         return
 
-    item_id = input("Enter item ID to mark: ").strip()
+    item_id = input("Enter item ID to mark: ").lower().strip()
 
     while item_id == "":
         print("Item ID cannot be empty.")
-        item_id = input("Enter item ID to mark: ").strip()
+        item_id = input("Enter item ID to mark: ").strip().lower()
+
+    while item_id not in [item["item_id"].lower() for item in awems]:
+        print(f"Item with ID '{item_id}' not found. Please try again.\n")
+        item_id = input("Enter item ID to mark: ").strip().lower()
 
     while True:
         try:
-            status_choice = int(
-                input("Select new status (1. Recycled | 2. Disposed): "))
+            status_choice = int(input("Select new status (1. Recycled | 2. Disposed): "))
             if status_choice in [1, 2]:
                 break
             print("Enter a number between 1 and 2.")
@@ -648,12 +651,11 @@ def mark_item_status():
             new_status = "Disposed"
 
     for item in awems:
-        if item["item_id"] == item_id:
+        if item["item_id"].lower().strip() == item_id.lower().strip():
             item["storage_status"] = new_status
             save_data()
             print(f"\nItem {item_id} marked as {new_status}.------------\n")
-            return
-    print("\nItem not found.------------\n")
+            return   
 
 
 def generate_report():
