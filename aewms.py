@@ -344,8 +344,7 @@ def update_item():
 
     # loop until a valid item ID is entered or user cancels
     while True:
-        item_id = input(
-            "Enter item ID to update (or type 'exit' to cancel): ").strip()
+        item_id = input("Enter item ID to update (or type 'exit' to cancel): ").strip()
 
         if item_id.lower() == 'exit':
             print("Update cancelled.\n")
@@ -373,12 +372,10 @@ def update_item():
         found_item["device_name"] = new_name
 
     print(f"Current Category : {found_item['category']}")
-    new_category = input(
-        "Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
+    new_category = input("Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
     while new_category and new_category not in ["1", "2", "3"]:
         print("Invalid category input. Please enter 1, 2, or 3.")
-        new_category = input(
-            "Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
+        new_category = input("Choose new category (1. Recyclable / 2. Hazardous / 3. Non-Recyclable) (leave blank to keep current): ").strip()
     if new_category:
         match new_category:
             case "1":
@@ -394,12 +391,10 @@ def update_item():
         found_item["category"] = new_category
 
     print(f"Current Status : {found_item['storage_status']}")
-    new_status = input(
-        "Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
+    new_status = input("Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
     while new_status and new_status not in ["1", "2", "3"]:
         print("Invalid status input. Please enter 1, 2, or 3.")
-        new_status = input(
-            "Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
+        new_status = input("Choose new status (1. Stored / 2. Recycled / 3. Disposed) (leave blank to keep current): ").strip()
     if new_status:
         match new_status:
             case "1":
@@ -415,21 +410,25 @@ def update_item():
         found_item["storage_status"] = new_status
 
     print(f"Current Weight : {found_item['weight']} kg")
-    new_weight = input(
-        "Enter new weight in kg (leave blank to keep current): ").strip()
+    new_weight = input( "Enter new weight in kg (leave blank to keep current): ").strip()
     if new_weight:
         try:
             weight_value = float(new_weight)
             if weight_value <= 0:
                 print("Warning: Weight must be positive. Keeping old value.")
             else:
+                # found_item["weight"] = weight_value
+                current_total = sum(float(item['weight']) for item in awems) - found_item["weight"] + weight_value
+                if current_total >= MAX_CAPACITY:
+                    print(
+                        "ALERT: Cannot update weight – storage would exceed maximum capacity!")
+                    return
                 found_item["weight"] = weight_value
         except ValueError:
             print("Invalid weight input. Keeping old value.")
-
+    
     print(f"Current Fee per kg : {found_item['fee_per_kg']}")
-    new_fee = input(
-        "Enter new fee per kg (leave blank to keep current): ").strip()
+    new_fee = input("Enter new fee per kg (leave blank to keep current): ").strip()
     if new_fee:
         try:
             fee_value = float(new_fee)
