@@ -49,19 +49,19 @@ def storage_check():
     Prints a warning if usage exceeds 80% and an alert if storage is completely full.
     """
 
-    storage_capacity = 1000  # in kg
+    # storage_capacity = 1000  # in kg
     total_storage = sum(float(item["weight"]) for item in awems)
-    percentage = (total_storage / storage_capacity) * 100
+    percentage = (total_storage / MAX_CAPACITY) * 100
     print(f"\n=== STORAGE CAPACITY STATUS ===")
     print(f"Total Used    : {total_storage:.2f} kg")
-    print(f"Total Capacity: {storage_capacity} kg")
+    print(f"Total Capacity: {MAX_CAPACITY} kg")
     print(f"Usage         : {percentage:.1f}%")
-    print(f"Available     : {storage_capacity - total_storage:.2f} kg")
+    print(f"Available     : {MAX_CAPACITY - total_storage:.2f} kg")
 
     # warn if over 80%
-    if total_storage >= storage_capacity:
+    if total_storage >= MAX_CAPACITY:
         print("ALERT: Storage is FULL. Cannot add more items!")
-    elif total_storage > (storage_capacity * 0.8):
+    elif total_storage > (MAX_CAPACITY * 0.8):
         print("WARNING: Storage exceeds 80% capacity!")
     else:
         print("Storage level is normal.")
