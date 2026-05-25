@@ -102,6 +102,3 @@ EW003|Office Server Rack|Recyclable|65.0|10.0|Recycled|25/05/2026 -- 10:05:45
 
 This project is open-source and available under the MIT License.
 
-```
-
-```
