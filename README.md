@@ -13,7 +13,7 @@ An automated, console-based solution designed to track, manage, and audit electr
 * **Comprehensive Data Validation:** Robust, loop-contained error capturing prevents string injections on numerical/float fields (weight, choice selection, pricing).
 * **Capacity Limit Engine:** Enforces a rigid storage ceiling ($1000\text{ kg}$) with logic models flagging progressive warnings at $\ge 80\%$ usage and hard block thresholds at $100\%$.
 * **Hazardous Lifecycle Alerts:** Automated temporal calculation tracks time differences from date of entry, triggering critical alerts for hazardous items stored longer than 30 days.
-* **Audited Financial Receipts:** Computes localized transactional costs dynamically, applying a structured $5\%$ bulk discount rule if individual unit item mass crosses a $50\text{ kg}$ threshold.
+* **Audited Financial Receipts:** Computes localized transactional costs dynamically, applying a structured 5% bulk discount rule if individual unit item mass crosses a $50\text{ kg}$ threshold.
 * **Analytical Reporting Engine:** Segregates inventory variables into scope-defined buckets (Daily, Monthly, or Yearly), compiling categorized performance tables saved locally as clean structural reports.
 
 ---
