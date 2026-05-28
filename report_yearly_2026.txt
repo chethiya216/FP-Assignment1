@@ -2,25 +2,25 @@
 ================================================================================
                     GREEN LANTERN CORPS AEWMS
                     Yearly Report - 2026
-                    Generated: 2026-05-22 00:22:22
+                    Generated: 2026-05-22 22:43:58
 ================================================================================
 
 SUMMARY
 -------
-Total Items Collected : 12
-Total Weight          : 815.30 kg
-Total Fees Collected  : Rs. 70074.00
+Total Items Collected : 8
+Total Weight          : 801.30 kg
+Total Fees Collected  : Rs. 69270.00
 
 BY CATEGORY
 -----------
-Recyclable            : 6 items
-Hazardous             : 4 items
+Recyclable            : 3 items
+Hazardous             : 3 items
 Non-Recyclable        : 2 items
 
 BY STATUS
 ---------
-Stored                : 11 items
-Recycled              : 1 items
+Stored                : 6 items
+Recycled              : 2 items
 Disposed              : 0 items
 
 ================================================================================
@@ -28,15 +28,11 @@ Disposed              : 0 items
 ================================================================================
 ID       Device Name          Category        Weight   Fee (Rs.)    Status    
 --------------------------------------------------------------------------------
-ew002    Laptop               Recyclable      3.00     150.00       Stored    
-ew003    Fan                  Recyclable      7.00     350.00       Stored    
-ew004    2                    Hazardous       2.00     4.00         Stored    
 EW005    Phone                Recyclable      0.50     25.00        Recycled  
 EW006    Laptop               Recyclable      2.50     375.00       Stored    
-EW007    0.3                  Recyclable      2.00     300.00       Stored    
 EW008    Mobile Phone         Hazardous       0.30     60.00        Stored    
 EW009    Printer              Non-Recyclable  5.00     500.00       Stored    
-EW010    Desktop PC           Recyclable      8.00     960.00       Stored    
+EW010    Desktop PC           Recyclable      8.00     960.00       Recycled  
 EW011    Battery Pack         Hazardous       15.00    3750.00      Stored    
 EW012    Television           Non-Recyclable  750.00   60000.00     Stored    
 EW013    Air Conditioner      Hazardous       20.00    3600.00      Stored    
