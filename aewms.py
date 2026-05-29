@@ -110,7 +110,8 @@ def main_menu():
 def generate_id():
     """
     Automatically generate the next unique item ID in the format EW001, EW002, EW003.
-    Reads the last item ID in the list, extracts the number, increases it by 1, and returns the new ID formatted with leading zeros.
+    Reads the last item ID in the list, extracts the number, increases it by 1, 
+        and returns the new ID formatted with leading zeros.
     Returns 'EW001' if the list is empty.
     """
 
@@ -122,6 +123,8 @@ def generate_id():
         new_id = f"EW{new_id:03d}"
         return new_id
 
+# to sort items by weight when displaying inventory
+
 
 def get_weight(item):
     """
@@ -131,6 +134,8 @@ def get_weight(item):
 
     return float(item['weight'])
 
+# to sort items by category when displaying inventory
+
 
 def get_category(item):
     """
@@ -139,6 +144,8 @@ def get_category(item):
     """
 
     return item['category']
+
+# to display items with sorting options
 
 
 def display_items():
@@ -291,6 +298,8 @@ def add_item():
     save_data()
     print("\nItem added successfully.------------\n")
 
+# to delete items
+
 
 def delete_item():
     """
@@ -328,6 +337,8 @@ def delete_item():
                 break
     else:
         print("Deletion cancelled.")
+
+# to update items
 
 
 def update_item():
@@ -449,6 +460,8 @@ def update_item():
     save_data()
     print(f"\nItem {found_item['item_id']} updated successfully!\n")
 
+# to search items by ID or device name
+
 
 def search_item():
     """
@@ -551,15 +564,17 @@ def calculate_fee():
 def check_hazard_alert(automatic=False):
     """
     Check hazardous items stored for more than 30 days and display warning alerts.
-
     The function also calculates the total weight for each category and warns
     if any category exceeds 80% of the maximum storage capacity.
-
     Parameters:
         automatic (bool):
             True  - Shows only important alerts and warnings.
             False - Shows a full hazard and storage report.
     """
+    if not awems:
+        if not automatic:
+            print("No items available.\n")
+            return
 
     today = datetime.now()
     found_hazard = False
@@ -618,6 +633,8 @@ def check_hazard_alert(automatic=False):
             percentage = (total_weight / MAX_CAPACITY) * 100
             print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}%)")
         print("=" * 45 + "\n")
+
+# to mark items as recycled or disposed
 
 
 def mark_item_status():
