@@ -1,15 +1,11 @@
 from datetime import datetime  # to get current date and time
 
-# to create empty list to store data
-awems = []
+awems = []  # to create empty list to store data
 
-# txt file name
-FILE_NAME = "awems_data.txt"
-MAX_CAPACITY = 1000  # in kg
+FILE_NAME = "awems_data.txt"  # txt file name
+MAX_CAPACITY = 1000  # to set maximum storage capacity for the system in kg
 
 # to load data from txt file when program starts
-
-
 def load_data():
     """
     Loads saved items from the txt file when the programme starts. If no file exists, starts with an empty list.
@@ -20,8 +16,8 @@ def load_data():
             # awems.clear()
             for line in file:
                 data = line.strip().split("|")
-                if len(data) == 7:  # Ensure the line has all fields
-                    # Create a dictionary to match your Technical Design Document
+                if len(data) == 7:  # to ensure the line has all fields
+                    # to create a dictionary to match your Technical Design Document
                     item = {
                         "item_id": data[0],
                         "device_name": data[1],
@@ -36,8 +32,7 @@ def load_data():
         pass
 
 
-# to load data from txt file when program starts
-load_data()
+load_data()  # to load data from txt file when program starts
 
 
 def storage_check():
@@ -45,7 +40,6 @@ def storage_check():
     Shows how much storage is being used and warns if its over 80% or completely full.
     """
 
-    # storage_capacity = 1000  # in kg
     total_storage = sum(float(item["weight"]) for item in awems)
     percentage = (total_storage / MAX_CAPACITY) * 100
     print(f"\n=== STORAGE CAPACITY STATUS ===")
@@ -54,7 +48,7 @@ def storage_check():
     print(f"Usage         : {percentage:.1f}%")
     print(f"Available     : {MAX_CAPACITY - total_storage:.2f} kg")
 
-    # warn if over 80%
+    # to warn if total storage exceeds 80%
     if total_storage >= MAX_CAPACITY:
         print("ALERT: Storage is FULL. Cannot add more items!")
     elif total_storage > (MAX_CAPACITY * 0.8):
@@ -102,9 +96,8 @@ def main_menu():
     print("11. Save & Exit")
     print("="*67)
 
+
 # to automatically generate next item ID
-
-
 def generate_id():
     """
     Works out the next item ID in the EW001, EW002 format. Returns EW001 if the list is empty.
@@ -118,6 +111,8 @@ def generate_id():
         new_id = f"EW{new_id:03d}"
         return new_id
 
+# to sort items by weight when displaying inventory
+
 
 def get_weight(item):
     """
@@ -126,6 +121,8 @@ def get_weight(item):
 
     return float(item['weight'])
 
+# to sort items by category when displaying inventory
+
 
 def get_category(item):
     """
@@ -133,6 +130,8 @@ def get_category(item):
     """
 
     return item['category']
+
+# to display items with sorting options
 
 
 def display_items():
@@ -191,11 +190,13 @@ def add_item():
     Adds a new item to the system with input validation. Wont add if storage is full. Saves to file.
     """
 
+    # to calculate current total weight in storage before adding new item
     current_total = sum(float(item["weight"])for item in awems)
     if current_total >= MAX_CAPACITY:
         print("ALERT: Storage is FULL. Cannot add more items!\n")
         return
 
+    # to automatically generate next item ID by calling generate_id function
     new_id = generate_id()
     print(f"Item ID: {new_id}")
     item_id = new_id
@@ -224,9 +225,10 @@ def add_item():
         except ValueError:
             print("Invalid Input. Enter a number.")
 
-    item_storage_status = "Stored"  # default storage status
+    # to set default storage status to "stored" when adding new item
+    item_storage_status = "Stored"
 
-    current_total = sum(float(item['weight']) for item in awems)
+    # to validate weight input and check if adding the new item would exceed maximum storage capacity
     while True:
         try:
             item_weight = float(input(
@@ -245,6 +247,7 @@ def add_item():
         except ValueError:
             print("Invalid weight. Please enter a number.")
 
+    # to validate fee per kg input
     while True:
         try:
             item_fee_per_kg = float(input("Enter item fee per kg: "))
@@ -255,7 +258,8 @@ def add_item():
         except ValueError:
             print("Invalid fee per kg. Enter only the amount without KG")
 
-    date_added = datetime.now().strftime("%d/%m/%Y -- %H:%M:%S")
+    date_added = datetime.now().strftime(
+        "%d/%m/%Y -- %H:%M:%S")  # to get current date and time
 
     item = {
         "item_id": new_id,
@@ -270,6 +274,8 @@ def add_item():
     awems.append(item)
     save_data()
     print("\nItem added successfully.------------\n")
+
+# to delete items
 
 
 def delete_item():
@@ -305,6 +311,8 @@ def delete_item():
                 break
     else:
         print("Deletion cancelled.")
+
+# to update items
 
 
 def update_item():
@@ -423,6 +431,8 @@ def update_item():
     save_data()
     print(f"\nItem {found_item['item_id']} updated successfully!\n")
 
+# to search items by ID or device name
+
 
 def search_item():
     """
@@ -522,6 +532,10 @@ def check_hazard_alert(automatic=False):
     Checks for hazardous items stored over 30 days and warns if any category exceeds 80% capacity.
     automatic=True only shows alerts. automatic=False shows the full report.
     """
+    if not awems:
+        if not automatic:
+            print("No items available.\n")
+            return
 
     today = datetime.now()
     found_hazard = False
@@ -580,6 +594,8 @@ def check_hazard_alert(automatic=False):
             percentage = (total_weight / MAX_CAPACITY) * 100
             print(f"{category}: {total_weight:.2f} kg ({percentage:.1f}%)")
         print("=" * 45 + "\n")
+
+# to mark items as recycled or disposed
 
 
 def mark_item_status():
@@ -647,10 +663,11 @@ def generate_report():
         except ValueError:
             print("Enter a valid number.")
 
-    report_data = []
+    report_data = []  # to store items that match the selected report period
     today = datetime.now()
 
     for item in awems:
+        # to get item date from date_added field and convert to datetime object
         item_date = datetime.strptime(
             item["date_added"].split(" -- ")[0], "%d/%m/%Y")
 
@@ -727,7 +744,7 @@ Recycled              : {recycled} items
 Disposed              : {disposed} items
 
 {separator}
-                         ITEM DETAILS
+                        ITEM DETAILS
 {separator}
 """
 
