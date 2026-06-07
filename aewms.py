@@ -6,8 +6,6 @@ FILE_NAME = "awems_data.txt"  # txt file name
 MAX_CAPACITY = 1000  # to set maximum storage capacity for the system in kg
 
 # to load data from txt file when program starts
-
-
 def load_data():
     """
     Load all saved e-waste records from the txt file when the program starts.

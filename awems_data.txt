@@ -6,3 +6,4 @@ EW010|Desktop PC|Recyclable|8.0|120.0|Recycled|17/05/2026 -- 21:08:20
 EW011|Battery Pack|Hazardous|15.0|250.0|Stored|17/03/2026 -- 21:08:36
 EW012|Television|Non-Recyclable|750.0|80.0|Stored|17/05/2026 -- 21:08:55
 EW013|Air Conditioner|Hazardous|20.0|180.0|Stored|17/05/2026 -- 21:09:17
+EW014|Ink Cartridge|Recyclable|25.0|150.0|Stored|29/05/2026 -- 16:58:55
